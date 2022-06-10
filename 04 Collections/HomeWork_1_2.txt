@@ -1,0 +1,373 @@
+Задание 1
+Создать имитационную модель «причал морских катеров». Необходимо вводить следующую информацию:
+1. Среднее время между появлениями пассажиров
+на причале в разное время суток;
+2. Среднее время между появлениями катеров на причале в разное время суток;
+3. Тип остановки катер (конечная или нет).
+Необходимо определить:
+1. Среднее время пребывание человека на остановке;
+2. Достаточный интервал времени между приходами
+катеров, чтобы на остановке находилось не более N
+людей одновременно;
+3. Количество свободных мест в катере является случайной величиной.
+
+
+
+
+
+// причал, пирс
+class Pier {
+    public double getAvgTimePassengersArrive() {
+        return avgTimePassengersArrive;
+    }
+
+    public void setAvgTimePassengersArrive(double avgTimePassengersArrive) {
+        this.avgTimePassengersArrive = avgTimePassengersArrive;
+    }
+
+    public double getAvgTimeBoatsArrive() {
+        return avgTimeBoatsArrive;
+    }
+
+    public void setAvgTimeBoatsArrive(double avgTimeBoatsArrive) {
+        this.avgTimeBoatsArrive = avgTimeBoatsArrive;
+    }
+
+    public boolean isEndingStation() {
+        return isEndingStation;
+    }
+
+    public void setEndingStation(boolean endingStation) {
+        isEndingStation = endingStation;
+    }
+
+    private double avgTimePassengersArrive;
+    private double avgTimeBoatsArrive;
+    private boolean isEndingStation;
+
+    public void getInfo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter avg time passengers arrive --> ");
+        this.avgTimePassengersArrive = scanner.nextDouble();
+        System.out.print("Enter avg time boats arrive --> ");
+        this.avgTimeBoatsArrive = scanner.nextDouble();
+        System.out.print("Is this an ending station? (1-yes, 2-no) --> ");
+        int answer = scanner.nextInt();
+        this.isEndingStation = answer == 1;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter count of piers --> ");
+        int piersCount = scanner.nextInt();
+        ArrayList<Pier> piers = new ArrayList<Pier>();
+        for (int i = 0; i < piersCount; i++) {
+            System.out.printf("Fill out piers #%d:\n", i+1);
+            Pier pier = new Pier();
+            pier.getInfo();
+            piers.add(pier);
+        }
+
+
+        // average time people spend on the pier
+        double avgTimeBoatsArrive = 0;
+        double avgTimePeopleArrive = 0;
+        for (int i = 0; i < piersCount; i++) {
+            avgTimeBoatsArrive += piers.get(i).getAvgTimeBoatsArrive();
+            avgTimePeopleArrive += piers.get(i).getAvgTimePassengersArrive();
+        }
+        double avgTime = avgTimeBoatsArrive / piersCount / 2;
+        System.out.println("Average time people spend on the pier " +  avgTime);
+
+
+        // time span
+        // optimal count of people to stay in a pier
+        final int optimalPeopleCount = 8;
+        double optimalTimeSpan = avgTimePeopleArrive * optimalPeopleCount;
+        System.out.println("optimal count of people to stay in a pier: " +  optimalTimeSpan);
+    }
+}
+
+
+
+
+
+
+
+
+Задание 2
+Создать программу по работе со словарем. Например,
+англо-испанский или французско-немецкий, или любое
+другое направление. Программа должна:
+■ Обеспечивать начальный ввод данных для словаря;
+■ Позволять отобразить слово и его переводы;
+■ Позволять добавить, заменить, удалить переводы слова;
+■ Позволять добавить, заменить, удалить слово;
+■ Отображать топ-10 самых популярных слов (определяем популярность на основании счетчика обращений);
+■ Отображать топ-10 самых непопулярных слов (определяем непопулярность на основании счетчика обращений).
+
+
+
+
+package com.study;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        TreeMap<String, ArrayList<String>> dictionary = new TreeMap<String, ArrayList<String>>();
+        // + map for words rating (to define top-10)
+        TreeMap<String, Integer> wordsRating = new TreeMap<String, Integer>();
+
+
+        //region Default init region
+        ArrayList<String> translations1 = new ArrayList<String>();
+        translations1.add("развлекательный");
+        dictionary.put("recreational", translations1);
+        // default values (for easy checking)
+        wordsRating.put("recreational", 5);
+
+        ArrayList<String> translations2 = new ArrayList<String>();
+        translations2.add("приоритет");
+        translations2.add("первенство");
+        translations2.add("старшинство");
+        dictionary.put("precedence", translations2);
+        wordsRating.put("precedence", 2);
+
+        ArrayList<String> translations3 = new ArrayList<String>();
+        translations3.add("избыточный");
+        translations3.add("излишний");
+        translations3.add("чрезмерный");
+        dictionary.put("redundant", translations3);
+        wordsRating.put("redundant", 3);
+
+        ArrayList<String> translations4 = new ArrayList<String>();
+        translations4.add("достижение");
+        translations4.add("выполнение");
+        dictionary.put("accomplishment", translations4);
+        wordsRating.put("accomplishment", 1);
+        //endregion
+
+        Scanner scanner = new Scanner(System.in);
+        int choose = 0;
+        while (choose != -1) {
+            renderMenu();
+            System.out.print("Your choose --> ");
+            choose = scanner.nextInt();
+            switch (choose) {
+                case 1 -> {
+                    System.out.print("Enter new word --> ");
+                    String newWord = scanner.next();
+                    System.out.print("How many translations you want to add --> ");
+                    int translationsCount = scanner.nextInt();
+                    ArrayList<String> newTranslations = new ArrayList<>();
+                    for (int i = 0; i < translationsCount; i++) {
+                        System.out.printf("Enter translation #%d --> ", i+1);
+                        String translation = scanner.next();
+                        newTranslations.add(translation);
+                    }
+                    dictionary.put(newWord, newTranslations);
+                    System.out.println("Action completed successfully");
+                }
+                case 2 -> {
+                    printWordsChoose(dictionary);
+                    System.out.print("Enter word you want to delete --> ");
+                    String word = scanner.next();
+                    if(dictionary.containsKey(word)) {
+                        dictionary.remove(word);
+                        System.out.println("Action completed successfully");
+                    }
+                    else {
+                        System.out.println("Such word does not exist");
+                    }
+                }
+                case 3 -> {
+                    printDictionary(dictionary);
+                    System.out.print("Enter word you want to change --> ");
+                    String word = scanner.next();
+                    if(dictionary.containsKey(word)) {
+                        System.out.print("Enter new word --> ");
+                        String newWord = scanner.next();
+                        ArrayList<String> oldTranslations = dictionary.get(word);
+                        dictionary.remove(word);
+                        dictionary.put(newWord, oldTranslations);
+                        System.out.println("Action completed successfully");
+                    }
+                    else {
+                        System.out.println("Such word does not exist");
+                    }
+                }
+                case 4 -> {
+                    printDictionary(dictionary);
+                    System.out.print("Enter word you want to add translation --> ");
+                    String word = scanner.next();
+                    if(dictionary.containsKey(word)) {
+                        System.out.print("Enter new translation --> ");
+                        String newTranslation = scanner.next();
+                        ArrayList<String> wordTranslations = dictionary.get(word);
+                        wordTranslations.add(newTranslation);
+                        dictionary.put(word, wordTranslations);
+                        System.out.println("Action completed successfully");
+                        // change word rating
+                        Integer rating = wordsRating.get(word);
+                        wordsRating.put(word, ++rating);
+                        // for checking
+                        // System.out.println("word rating = " + wordsRating.get(word));
+                    }
+                    else {
+                        System.out.println("Such word does not exist");
+                    }
+                }
+                case 5 -> {
+                    printDictionary(dictionary);
+                    System.out.print("Enter word you want to delete translation --> ");
+                    String word = scanner.next();
+                    if(dictionary.containsKey(word)) {
+                        System.out.print("Enter translation you want to delete --> ");
+                        String translation = scanner.next();
+                        ArrayList<String> allTranslations = dictionary.get(word);
+                        if(allTranslations.contains(translation)) {
+                            allTranslations.remove(translation);
+                            dictionary.put(word, allTranslations);
+                            System.out.println("Action completed successfully");
+                            // change word rating
+                            Integer rating = wordsRating.get(word);
+                            wordsRating.put(word, ++rating);
+                        }
+                        else {
+                            System.out.println("Such translation does not exist");
+                        }
+                    }
+                    else {
+                        System.out.println("Such word does not exist");
+                    }
+                }
+                case 6 -> {
+                    printDictionary(dictionary);
+                    System.out.print("Enter word you want to replace translation --> ");
+                    String word = scanner.next();
+                    if(dictionary.containsKey(word)) {
+                        System.out.print("Enter translation you want to replace --> ");
+                        String translationToReplace = scanner.next();
+                        ArrayList<String> allTranslations = dictionary.get(word);
+                        if(allTranslations.contains(translationToReplace)) {
+                            System.out.print("Enter new translation --> ");
+                            String newTranslation = scanner.next();
+                            int insertIdx = allTranslations.indexOf(translationToReplace);
+                            allTranslations.remove(translationToReplace);
+                            allTranslations.add(insertIdx, newTranslation);
+                            dictionary.put(word, allTranslations);
+                            System.out.println("Action completed successfully");
+                            // change word rating
+                            Integer rating = wordsRating.get(word);
+                            wordsRating.put(word, ++rating);
+                        }
+                        else {
+                            System.out.println("Such translation does not exist");
+                        }
+                    }
+                    else {
+                        System.out.println("Such word does not exist");
+                    }
+                }
+                case 7 -> printDictionary(dictionary);
+                case 8 -> showTopWords(wordsRating, 10, false);
+                case 9 -> showTopWords(wordsRating, 10, true);
+                case 10 -> choose = -1;
+            }
+        }
+    }
+
+        public static void printDictionary (TreeMap < String, ArrayList < String >> dictionary){
+            System.out.println("\nDictionary:");
+            Iterator<Map.Entry<String, ArrayList<String>>> iterator = getIterator(dictionary);
+
+            int counter = 1;
+            while (iterator.hasNext()) {
+                Map.Entry item = (Map.Entry) iterator.next();
+                System.out.println(counter + ". " + item.getKey() + ": " + item.getValue());
+                counter++;
+            }
+        }
+
+        public static void printWordsChoose (TreeMap < String, ArrayList < String >> dictionary){
+            System.out.println("\nWords list:");
+            Iterator<Map.Entry<String, ArrayList<String>>> iterator = getIterator(dictionary);
+
+            int counter = 1;
+            while (iterator.hasNext()) {
+                Map.Entry item = (Map.Entry) iterator.next();
+                System.out.println(counter + ". " + item.getKey());
+                counter++;
+            }
+        }
+
+        public static void renderMenu () {
+            System.out.println(
+                    """
+
+                            Menu:
+                            1. Add new word;
+                            2. Delete word;
+                            3. Replace word;
+                            4. Add translation to word;
+                            5. Delete translation of word;
+                            6. Replace translation of word;
+                            7. Show all words;
+                            8. Show Top-10 the most popular words;
+                            9. Show Top-10 the least popular words;
+                            10. Exit
+                            ==============================================
+                            """);
+        }
+
+        private static Iterator<Map.Entry<String, ArrayList<String>>> getIterator
+        (TreeMap < String, ArrayList < String >> dictionary){
+            Set<Map.Entry<String, ArrayList<String>>> set = dictionary.entrySet();
+            return set.iterator();
+        }
+
+        public static void showTopWords(TreeMap<String, Integer> wordsRating, int countWords, boolean descendingOrder) {
+            // get ArrayList of all words rating
+            ArrayList<Integer> ratingValues = new ArrayList<>();
+            Set<Map.Entry<String, Integer>> set = wordsRating.entrySet();
+            Iterator<Map.Entry<String, Integer>> iterator =  set.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry item = (Map.Entry) iterator.next();
+                Integer value = (Integer)item.getValue();
+                ratingValues.add(value);
+            }
+
+            // sort rating list by required order
+            if(descendingOrder) {
+                Collections.sort(ratingValues, Collections.reverseOrder());
+            }
+            else {
+                Collections.sort(ratingValues);
+            }
+
+            //  equals to ratingValues.size() > 10 ? 10 : ratingValues.size();
+            int countElementsToShow = Math.min(ratingValues.size(), countWords);
+
+            // show words in order, depends on their rating
+            Set<String> keys = wordsRating.keySet();
+            for (int i = 0; i < countElementsToShow; i++) {
+                for (String key : keys) {
+                    if(wordsRating.get(key) == ratingValues.get(i)) {
+                        System.out.printf("%d. %s\n", i+1, key);
+                    }
+                }
+            }
+        }
+
+}
+
+
+
+
+
+
+
+

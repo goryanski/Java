@@ -1,0 +1,76 @@
+создайте сервлет который будет принимать у пользователя логи и пароль и выводить ему их в след окне
+создайте сервлет который вывод любую цитату
+
+1.
+// doPost
+ public  void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        PrintWriter writer = response.getWriter();
+        writer.println("<html> Login: " + login + "; Password: " + password +  "</html>");
+        writer.flush();
+    }
+
+
+// index
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSP - Hello World</title>
+</head>
+<body>
+<h1><%= "Hello World!" %>
+</h1>
+<br/>
+<a href="hello-servlet">Hello Servlet</a>
+
+<form action="helloServlet" method="post">
+    Login: <input type = "text" size="5" name="login">
+    &nbsp;&nbsp;
+    Password: <input type = "text" size="5" name="password">
+    &nbsp;&nbsp;
+    <input type="submit" value="Show">
+</form>
+
+</body>
+</html>
+
+
+
+
+
+
+2. 
+// doPost
+    public  void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String quote = request.getParameter("quote");
+
+        PrintWriter writer = response.getWriter();
+        writer.println("<html> quote: " + quote + "</html>");
+        writer.flush();
+    }
+
+
+// index
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSP - Hello World</title>
+</head>
+<body>
+<h1><%= "Hello World!" %>
+</h1>
+<br/>
+<a href="hello-servlet">Hello Servlet</a>
+
+<form action="helloServlet" method="post">
+    <textarea name="quote" cols="40" rows="5"></textarea>
+    &nbsp;&nbsp;
+    <input type="submit" value="Show">
+</form>
+
+</body>
+</html>

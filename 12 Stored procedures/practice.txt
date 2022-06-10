@@ -1,0 +1,54 @@
+создать БД поетов) 
+Где будет 
+Ид
+ФИО 
+Произведение
+Год рождения 
+Год смерти(пустая)
+
+Создать хранимую функцию которая выставляет смерть поета
+
+
+
+
+CREATE TABLE Poets (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  fullName VARCHAR(45) NOT NULL,
+  creation VARCHAR(30) NOT NULL,
+  birthYear INT NOT NULL,
+  deathYear INT
+);
+INSERT INTO Poets(fullName, creation, birthYear)
+VALUES
+('Turgenev A.O.', 'Mumu', 1889),
+('Pushkin A.C.', 'Ruslan and Ludmila', 1799),
+('Shevchenko T.G.', 'Kobzar', 1814);
+
+
+CREATE PROCEDURE setAuthorDeath(date INT, authorId INT)
+BEGIN
+    UPDATE Poets SET deathYear = date WHERE id = authorId;
+END;
+
+
+
+
+public class Main {
+    public static void main(String[] args) throws ClassNotFoundException {
+        String url = "jdbc:mysql://localhost:3306/dbtest";
+        String username = "root";
+        String password = "1793";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             Statement statement = connection.createStatement()) {
+
+            CallableStatement callableStatement = connection.prepareCall("{call setAuthorDeath(?, ?)}");
+            callableStatement.setInt(1, 1865);
+            callableStatement.setInt(2, 2);
+            callableStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

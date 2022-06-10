@@ -1,0 +1,55 @@
+USE carshowroom;
+CREATE TABLE Cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    color VARCHAR(25) NOT NULL,
+    type VARCHAR(25) NOT NULL,
+    model VARCHAR(25) NOT NULL,
+    transmission VARCHAR(25) NOT NULL DEFAULT 'auto',
+    price DECIMAL(15,2) NOT NULL
+);
+INSERT INTO Cars(color, type, model, price)
+VALUES
+('blue', 'business', 'Audi A7', 900000),
+('red', 'business', 'Lexus B11', 700000.5),
+('black', 'sport', 'Ferrari R32', 2000000.8),
+('white', 'sport', 'BMW G7', 1700000.2);
+
+
+CREATE TABLE Customers (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  fullName VARCHAR(60) NOT NULL,
+  Email VARCHAR(40) NOT NULL CHECK (Email != '') UNIQUE,
+  Phone VARCHAR(15) NOT NULL CHECK (Phone != '') UNIQUE
+);
+INSERT INTO Customers(fullName, Email, Phone)
+VALUES
+('Ivanov Igor Igorovich', 'igoryan208@gmail.com', '+380934094350'),
+('Petrov Ivan Ivanovich', 'petro777@gmail.com', '+380934094777'),
+('Sidorova Maria Mitrofanovna', 'motrya18@gmail.com', '+380978810201');
+
+
+CREATE TABLE Orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    price DECIMAL(15,2) NOT NULL,
+    createdAt DATE NOT NULL,
+    carsCount INT NOT NULL DEFAULT 1,
+    carId INT NOT NULL REFERENCES Cars(id) ON DELETE CASCADE,
+    customerId INT NOT NULL REFERENCES Customers(id) ON DELETE CASCADE
+);
+INSERT INTO Orders(createdAt, price, carId, customerId)
+VALUES
+# option 1 (we know ids and prise)
+('2022-01-23', 1700000.2, 4, 1),
+# option 2 (we don't know ids and prise, but there is another data)
+(
+    '2021-04-11',
+    (SELECT price FROM Cars WHERE model = 'Audi A7'),
+    (SELECT id FROM Cars WHERE model = 'Audi A7'),
+    (SELECT id FROM Customers WHERE fullName = 'Sidorova Maria Mitrofanovna')
+ );
+
+
+SELECT C2.fullName, C.model, Orders.createdAt, Orders.carsCount
+FROM Orders
+JOIN Cars C on C.id = Orders.carId
+JOIN Customers C2 on C2.id = Orders.customerId

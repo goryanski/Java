@@ -1,0 +1,364 @@
+Задание 1
+Создайте приложение для подсчета площади геометрических фигур. Минимальные требования по фигурам:
+■ Треугольник;
+■ Прямоугольник;
+■ Квадрат;
+■ Ромб.
+Протестируйте все возможности приложения с использованием JUnit.
+
+// path: main/java
+public class AreaCalculator {
+    int getSquareArea(int a) {
+        return a*a;
+    }
+    double getTriangleArea(int b, int h) {
+        return (double) (b * h) / 2;
+    }
+    int getRectangleArea(int a, int b) {
+        return a*b;
+    }
+    int getRhombusArea(int base, int height) {
+        return base * height;
+    }
+}
+
+
+// path: test/java
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TestAreaCalculator {
+    @Test
+    public void getSquareAreaTest() throws Exception {
+        AreaCalculator calculator = new AreaCalculator();
+        int area = calculator.getSquareArea(5);
+        Assert.assertEquals(25, area);
+    }
+    @Test
+    public void getTriangleAreaTest() throws Exception {
+        AreaCalculator calculator = new AreaCalculator();
+        double area = calculator.getTriangleArea(3, 2);
+        Assert.assertEquals(3, area, 0);
+    }
+    @Test
+    public void getRectangleAreaTest() throws Exception {
+        AreaCalculator calculator = new AreaCalculator();
+        int area = calculator.getRectangleArea(5, 10);
+        Assert.assertEquals(50, area);
+    }
+    @Test
+    public void getRhombusAreaTest() throws Exception {
+        AreaCalculator calculator = new AreaCalculator();
+        int area = calculator.getRhombusArea(10, 7);
+        Assert.assertEquals(70, area);
+    }
+}
+
+
+
+
+Задание 2
+Создайте приложение для конвертации валют. Минимальные требования по валютам:
+■ Доллар;
+■ Евро;
+■ Фунт стерлингов;
+■ Йена.
+Протестируйте все возможности приложения с использованием JUnit.
+
+
+public class CurrencyCalculator {
+    double convertHryvniaToDollar(double value) {
+        double res = value / 29.33;
+        return Math.round(res * 100.0) / 100.0; // round to 2 digit after point
+    }
+    double convertHryvniaToEuro(double value) {
+        double res = value / 32.32;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertHryvniaToPound(double value) {
+        double res = value / 38.79;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertHryvniaToYuan(double value) {
+        double res = value / 4.6;
+        return Math.round(res * 100.0) / 100.0;
+    }
+}
+
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TestCurrencyCalculator {
+    @Test
+    public void convertHryvniaToDollarTest() throws Exception {
+        CurrencyCalculator convertor = new CurrencyCalculator();
+        double res = convertor.convertHryvniaToDollar(100);
+        Assert.assertEquals(3.41, res, 0);
+    }
+    @Test
+    public void convertHryvniaToEuroTest() throws Exception {
+        CurrencyCalculator convertor = new CurrencyCalculator();
+        double res = convertor.convertHryvniaToEuro(100);
+        Assert.assertEquals(3.09, res, 0);
+    }
+    @Test
+    public void convertHryvniaToPoundTest() throws Exception {
+        CurrencyCalculator convertor = new CurrencyCalculator();
+        double res = convertor.convertHryvniaToPound(100);
+        Assert.assertEquals(2.58, res, 0);
+    }
+    @Test
+    public void convertHryvniaToYuanTest() throws Exception {
+        CurrencyCalculator convertor = new CurrencyCalculator();
+        double res = convertor.convertHryvniaToYuan(100);
+        Assert.assertEquals(21.74, res, 0);
+    }
+}
+
+
+
+
+Задание 3
+Создайте приложение для работы со строками. Минимальные требования по функциональности:
+■ Проверка строки на палиндром;
+■ Проверка количества гласных;
+■ Проверка количества согласных;
+■ Подсчет количества вхождений слова в строку.
+Протестируйте все возможности приложения с использованием JUnit.
+
+
+
+public class StringWorker {
+    boolean isPalindrome(String str)
+    {
+        int i = 0, j = str.length() - 1;
+        while (i < j) {
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+    int getCountVowels(String str) {
+        int count = 0;
+        str = str.toLowerCase();
+        char[] vowels = {'a', 'e', 'i', 'o', 'u', 'y'};
+        for (int i=0 ; i<str.length(); i++){
+            char ch = str.charAt(i);
+            for (int j = 0; j < vowels.length; j++) {
+                if (ch == vowels[j]) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+    int getCountConsonants(String str) {
+        int count = 0;
+        str = str.toUpperCase();
+        char[] consonants  = {'B', 'C', 'D', 'F', 'G', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'S', 'T', 'V', 'X', 'Z', 'H', 'R', 'W'};
+        for (int i=0 ; i<str.length(); i++){
+            char ch = str.charAt(i);
+            for (int j = 0; j < consonants.length; j++) {
+                if (ch == consonants[j]) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+    int getCountWords(String str, String word) {
+        int count = 0;
+        str = str.toLowerCase();
+        word = word.toLowerCase();
+        String[] stringsArray = str.split("[ ,?.:;!]+"); // split by one of this sign
+        for (String stringPart : stringsArray) {
+            if(stringPart.equals(word)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TestStringWorker {
+    @Test
+    public void isPalindromeTest() throws Exception {
+        StringWorker stringWorker = new StringWorker();
+        boolean res = stringWorker.isPalindrome("ololo");
+        Assert.assertEquals(true, res);
+    }
+    @Test
+    public void getCountVowelsTest() throws Exception {
+        StringWorker stringWorker = new StringWorker();
+        int res = stringWorker.getCountVowels("Ololo");
+        Assert.assertEquals(3, res);
+    }
+    @Test
+    public void getCountConsonantsTest() throws Exception {
+        StringWorker stringWorker = new StringWorker();
+        int res = stringWorker.getCountConsonants("Ololo");
+        Assert.assertEquals(2, res);
+    }
+    @Test
+    public void getCountWordsTest() throws Exception {
+        StringWorker stringWorker = new StringWorker();
+        int res = stringWorker.getCountWords("When I was walking I met the ololo. I just said hello to ololo", "Ololo");
+        Assert.assertEquals(2, res);
+    }
+}
+
+
+
+
+
+
+
+Задание 4
+Создайте приложение для перевода значения длины
+в различные величины измерения. Минимальные требования по функциональности:
+■ Миллиметры;
+■ Сантиметры;
+■ Дециметры;
+■ Метры;
+■ Километры.
+Протестируйте все возможности приложения с использованием JUnit.
+
+
+
+public class LengthConvertor {
+    double convertMetersToMillimeters(double value) {
+        double res = value * 1000;
+        return Math.round(res * 100.0) / 100.0; // round to 2 digit after point
+    }
+    double convertMetersToCentimeters(double value) {
+        double res = value * 100;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertMetersToDecimeters(double value) {
+        double res = value * 10;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertKilometersToMeters(double value) {
+        double res = value * 1000;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertMetersToKilometers(double value) {
+        double res = value / 1000;
+        return Math.round(res * 100.0) / 100.0;
+    }
+}
+
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TestLengthConvertor {
+    @Test
+    public void convertMetersToMillimetersTest() throws Exception {
+        LengthConvertor convertor = new LengthConvertor();
+        double res = convertor.convertMetersToMillimeters(4);
+        Assert.assertEquals(4000, res, 0);
+    }
+    @Test
+    public void convertMetersToCentimetersTest() throws Exception {
+        LengthConvertor convertor = new LengthConvertor();
+        double res = convertor.convertMetersToCentimeters(4);
+        Assert.assertEquals(400, res, 0);
+    }
+    @Test
+    public void convertMetersToDecimetersTest() throws Exception {
+        LengthConvertor convertor = new LengthConvertor();
+        double res = convertor.convertMetersToDecimeters(4);
+        Assert.assertEquals(40, res, 0);
+    }
+    @Test
+    public void convertKilometersToMetersTest() throws Exception {
+        LengthConvertor convertor = new LengthConvertor();
+        double res = convertor.convertKilometersToMeters(4);
+        Assert.assertEquals(4000, res, 0);
+    }
+    @Test
+    public void convertMetersToKilometersTest() throws Exception {
+        LengthConvertor convertor = new LengthConvertor();
+        double res = convertor.convertMetersToKilometers(4000);
+        Assert.assertEquals(4, res, 0);
+    }
+}
+
+
+
+
+Задание 5
+Создайте приложение для перевода значения веса в различные величины измерения. Минимальные требования
+по функциональности:
+■ Миллиграмм;
+■ Грамм;
+■ Килограмм;
+■ Центнер;
+■ Тонна.
+Протестируйте все возможности приложения с использованием JUnit. 
+
+
+
+public class WeightConvertor {
+    double convertGramToMilligram(double value) {
+        double res = value * 1000;
+        return Math.round(res * 100.0) / 100.0; // round to 2 digit after point
+    }
+    double convertKilogramToGram(double value) {
+        double res = value * 1000;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertKilogramToCentner(double value) {
+        double res = value / 100;
+        return Math.round(res * 100.0) / 100.0;
+    }
+    double convertKilogramToTon(double value) {
+        double res = value / 1000;
+        return Math.round(res * 100.0) / 100.0;
+    }
+}
+
+
+
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TestWeightConvertor {
+    @Test
+    public void convertMetersToMillimetersTest() throws Exception {
+        WeightConvertor convertor = new WeightConvertor();
+        double res = convertor.convertGramToMilligram(4);
+        Assert.assertEquals(4000, res, 0);
+    }
+    @Test
+    public void convertKilogramToGramTest() throws Exception {
+        WeightConvertor convertor = new WeightConvertor();
+        double res = convertor.convertKilogramToGram(4);
+        Assert.assertEquals(4000, res, 0);
+    }
+    @Test
+    public void convertKilogramToCentnerTest() throws Exception {
+        WeightConvertor convertor = new WeightConvertor();
+        double res = convertor.convertKilogramToCentner(40);
+        Assert.assertEquals(0.4, res, 0);
+    }
+    @Test
+    public void convertKilogramToTonTest() throws Exception {
+        WeightConvertor convertor = new WeightConvertor();
+        double res = convertor.convertKilogramToTon(40);
+        Assert.assertEquals(0.04, res, 0);
+    }
+}
+
+

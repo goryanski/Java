@@ -1,0 +1,263 @@
+Task# 1
+Добавить в класс Phone методы: receiveCall, имеет один параметр – имя звонящего. Выводит на консоль сообщение “Звонит {name}”. getNumber – возвращает номер телефона. Вызвать эти методы для каждого из объектов.
+Добавить конструктор в класс Phone, который принимает на вход три параметра для инициализации переменных класса - number, model и weight. 
+Добавить конструктор, который принимает на вход два параметра для инициализации переменных класса - number, model. 
+Добавить конструктор без параметров.
+Вызвать из конструктора с тремя параметрами конструктор с двумя. 
+Добавьте перегруженный метод receiveCall, который принимает два параметра - имя звонящего и номер телефона звонящего. Вызвать этот метод.
+Создать метод sendMessage с аргументами переменной длины. Данный метод принимает на вход номера телефонов, которым будет отправлено сообщение. Метод выводит на консоль номера этих телефонов.
+
+
+class Phone {
+    private String number;
+    private String model;
+    private Float weight;
+
+    Phone(String number, String model, Float weight) {
+        this(number, model);
+        setWeight(weight);
+    }
+    Phone(String number, String model) {
+        setNumber(number);
+        setModel(model);
+    }
+    Phone() {
+        setNumber("default");
+        setModel("default");
+        setWeight(100f);
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+    public void setModel(String model) {
+        this.model = model;
+    }
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+    public String getModel() {
+        return model;
+    }
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void receiveCall(String name) {
+        System.out.println(String.format("Calls %s", name));
+    }
+    public void receiveCall(String name, String number) {
+        System.out.println(String.format("Calls %s with number %s", name, number));
+    }
+    public void sendMessage(String ...args) {
+        for (int i = 0; i < args.length; i++) {
+            System.out.println(args[i]);
+        }
+    }
+}
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Phone phone1 = new Phone("+380934094351", "Samsung A755", 144.5f);
+        Phone phone2 = new Phone("+380924043452", "Iphone X", 124.5f);
+        Phone phone3 = new Phone("+380954094366", "Nokia A755", 144.5f);
+
+        System.out.println("phone1: name - " + phone1.getNumber() + "; model - " + phone1.getModel() + "; weight - " + phone1.getWeight());
+        System.out.println("phone2: name - " + phone2.getNumber() + "; model - " + phone2.getModel() + "; weight - " + phone2.getWeight());
+        System.out.println("phone3: name - " + phone3.getNumber() + "; model - " + phone3.getModel() + "; weight - " + phone3.getWeight());
+
+        phone1.receiveCall("Igor");
+        phone2.receiveCall("Vita");
+        phone3.receiveCall("Nina");
+
+        phone1.receiveCall("Igor", "+380934094351");
+        phone2.receiveCall("Vita", "+380924043452");
+        phone3.receiveCall("Nina", "+380954094366");
+
+        phone1.sendMessage("+380934094351", "+380924043452", "+380954094366");
+    }
+}
+
+
+
+
+
+
+
+
+Task #2
+Создать класс "Матрица". Класс должен иметь следующие переменные:
+двумерный массив вещественных чисел;
+количество строк и столбцов в матрице.
+Класс должен иметь следующие методы:
+сложение с другой матрицей;
+умножение на число;
+вывод на печать; 
+умножение матриц 
+
+
+
+class Matrix {
+    private double[][] array;
+    private int rows;
+    private int cols;
+    private int minMatrixNumber;
+    private int maxMatrixNumber;
+
+    // random Matrix
+    Matrix() {
+        setRows(4);
+        setCols(4);
+        setMinMatrixNumber(5);
+        setMaxMatrixNumber(20);
+
+        double[][] newArray = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                newArray[i][j] = this.getRandomDouble(minMatrixNumber, maxMatrixNumber);
+            }
+        }
+        setArray(newArray);
+    }
+
+    // random Matrix
+    Matrix(int rows, int cols) {
+        this();
+        setRows(rows);
+        setCols(cols);
+    }
+
+    // custom Matrix
+    Matrix(int rows, int cols, double[][] array) {
+        setRows(rows);
+        setCols(cols);
+        setArray(array);
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+    public void setArray(double[][] array) {
+        this.array = array;
+    }
+    public void setMinMatrixNumber(int minMatrixNumber) {
+        this.minMatrixNumber = minMatrixNumber;
+    }
+    public void setMaxMatrixNumber(int maxMatrixNumber) {
+        this.maxMatrixNumber = maxMatrixNumber;
+    }
+
+    private double getRandomDouble(int min, int max) {
+        Random r = new Random();
+        double x = min + (max - min) * r.nextDouble();
+        return Math.round(x * 100.0) / 100.0; // round to 2 digit after point
+    }
+
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(array[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println("\n\n");
+    }
+
+    public void addMatrix(double[][] arrayToAdd) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] += arrayToAdd[i][j];
+            }
+        }
+    }
+
+    public void multiplyMatrix(double[][] arrayToMultiply) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] *= arrayToMultiply[i][j];
+            }
+        }
+    }
+
+    public void multiplyMatrixOnNumber(double multiplyNumber) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] *= multiplyNumber;
+            }
+        }
+    }
+}
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Scanner console = new Scanner(System.in);
+
+        // 1.  adding
+        System.out.print("Enter rows count: ");
+        int rows = console.nextInt();
+        System.out.print("Enter cols count: ");
+        int cols = console.nextInt();
+
+        System.out.print("Enter first matrix: ");
+        double[][] arr1 = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print("Enter number: ");
+                arr1[i][j] = console.nextDouble();
+            }
+        }
+
+        System.out.print("Enter second matrix: ");
+        double[][] arr2 = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print("Enter number: ");
+                arr2[i][j] = console.nextDouble();
+            }
+        }
+
+        System.out.print("Enter multiply number: ");
+        double multiplyNumber = console.nextDouble();
+
+
+
+        System.out.println("\n\nMatrix adding: ");
+        double[][] arrToAdd = copyArray(arr1, rows, cols);
+        Matrix matrix1 = new Matrix(rows, cols, arrToAdd);
+        matrix1.addMatrix(arr2);
+        matrix1.printMatrix();
+
+
+        // 2.  Matrix multiplying
+        System.out.println("Matrix multiplying: ");
+        double[][] arrToMultiply = copyArray(arr1, rows, cols);
+        Matrix matrix2 = new Matrix(rows, cols, arrToMultiply);
+        matrix2.multiplyMatrix(arr2);
+        matrix2.printMatrix();
+
+        
+        // 3.  Matrix multiply on multiply number
+        System.out.println("Matrix multiply on multiply number: ");
+        double[][] arrToMultiplyOnNumber = copyArray(arr1, rows, cols);
+        Matrix matrix3 = new Matrix(rows, cols, arrToMultiplyOnNumber);
+        matrix3.multiplyMatrixOnNumber(multiplyNumber);
+        matrix3.printMatrix();
+    }
+
+    private static  double[][] copyArray (double[][] array, int rows, int cols) {
+        double[][] newArr = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                newArr[i][j] = array[i][j];
+            }
+        }
+        return newArr;
+    }
+}

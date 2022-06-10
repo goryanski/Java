@@ -1,0 +1,279 @@
+Задание 1
+Создайте однотабличную базу данных «Автомобили».
+В таблице храните информацию об автомобилях. Минимальные требования:
+ Название производителя автомобиля;
+ Название автомобиля;
+ Объём двигателя;
+ Год выпуска;
+ Цвет автомобиля;
+ Тип автомобиля: седан, хетчбек, универсал. (не отдельная таблица)
+
+
+
+
+            statement.executeUpdate("CREATE TABLE Cars (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "manufacturer VARCHAR(30) NOT NULL, " +
+                    "carName VARCHAR(30) NOT NULL, " +
+                    "engineVolume DECIMAL(10,2) NOT NULL, " +
+                    "year INT NOT NULL, " +
+                    "color VARCHAR(30) NOT NULL, " +
+                    "type VARCHAR(30) NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO Cars(manufacturer, carName, engineVolume, year, color, type)" +
+                    "VALUES " +
+                    "('Canada', 'Honda A33', 5.5, 2003, 'red', 'Sedan')," +
+                    "('USA', 'BMW R88', 5.1, 2010, 'blue', 'Hetchback')," +
+                    "('Ukraine', 'Honda A33', 5.5, 2003, 'white', 'Universal')");
+
+
+
+
+
+
+
+Задание 2
+Создайте приложение для работы с базой данных
+из первого задания. Минимальные требования:
+ Отображение всего содержимого таблицы с автомобилями;
+ Показать всех производителей автомобилей;
+ Показать названия производителей и количество автомобилей каждого производителя.
+
+
+// Отображение всего содержимого таблицы с автомобилями;
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars;");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+//  Показать всех производителей автомобилей;
+
+            ResultSet carsSet = statement.executeQuery("SELECT manufacturer FROM Cars;");
+            while (carsSet.next()) {
+                String manufacturer = carsSet.getString("manufacturer");
+
+                System.out.printf("manufacturer - %s;\n", manufacturer);
+            }
+
+
+
+//  Показать названия производителей и количество автомобилей каждого производителя.
+            // add more cars
+            statement.executeUpdate("INSERT INTO Cars(manufacturer, carName, engineVolume, year, color, type)" +
+                    "VALUES " +
+                    "('Canada', 'newCar A33', 4.5, 2000, 'red', 'Sedan')," +
+                    "('Canada', 'BMW A22', 3.1, 2020, 'blue', 'Hetchback')," +
+                    "('Ukraine', 'Honda qq7', 5.7, 1996, 'yellow', 'Universal')");
+
+
+            // select
+            ResultSet carsSet = statement.executeQuery("SELECT manufacturer, COUNT(*) AS carsCount " +
+                    "FROM Cars " +
+                    "GROUP BY manufacturer;");
+            while (carsSet.next()) {
+                String manufacturer = carsSet.getString("manufacturer");
+                int carsCount = carsSet.getInt("carsCount");
+
+                System.out.printf("manufacturer - %s, count - %d\n", manufacturer, carsCount);
+            }
+
+
+
+
+
+Задание 3
+Добавьте ко второму заданию следующую функциональность:
+ Показать производителя с наибольшим количеством автомобилей;
+ Показать производителя с наименьшим количеством автомобилей;
+ Показать все автомобили конкретного года выпуска;
+ Показать все автомобили с годом выпуска в указанном диапазоне.
+
+
+
+//  Показать производителя с наибольшим количеством автомобилей;
+            ResultSet carsSet = statement.executeQuery("SELECT manufacturer, COUNT(*) AS carsCount " +
+                    "FROM Cars " +
+                    "GROUP BY manufacturer;");
+
+            int maxCount = 0;
+            String maxCountManufacturer = "";
+            while (carsSet.next()) {
+                String manufacturer = carsSet.getString("manufacturer");
+                int carsCount = carsSet.getInt("carsCount");
+
+                if (carsCount > maxCount) {
+                    maxCount = carsCount;
+                    maxCountManufacturer = manufacturer;
+                }
+            }
+
+            System.out.printf("maxCountManufacturer - %s, maxCount - %d\n", maxCountManufacturer, maxCount);
+
+
+
+
+//  Показать производителя с наименьшим количеством автомобилей;
+            ResultSet carsSet = statement.executeQuery("SELECT manufacturer, COUNT(*) AS carsCount " +
+                    "FROM Cars " +
+                    "GROUP BY manufacturer;");
+
+            int minCount = 0;
+            String minCountManufacturer = "";
+            boolean firstManufacturerInList = true;
+            while (carsSet.next()) {
+                String manufacturer = carsSet.getString("manufacturer");
+                int carsCount = carsSet.getInt("carsCount");
+
+                // only first iteration (to set the first element as min)
+                if(firstManufacturerInList) {
+                    minCount = carsCount;
+                    minCountManufacturer = manufacturer;
+                    firstManufacturerInList = false;
+                }
+
+                if (carsCount < minCount) {
+                    minCount = carsCount;
+                    minCountManufacturer = manufacturer;
+                }
+            }
+
+            System.out.printf("minCountManufacturer - %s, minCount - %d\n", minCountManufacturer, minCount);
+
+
+// Показать все автомобили конкретного года выпуска;
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE year = 2020;");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+// Показать все автомобили с годом выпуска в указанном диапазоне.
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE year >= 2000 AND year <= 2020;");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+
+Задание 4
+Добавьте к третьему заданию следующую функциональность:
+ Показать все автомобили конкретного производителя;
+ Создать фильтр для отображения автомобилей по указанному цвету;
+ Создать фильтр по объёму двигателя;
+ Создать фильтр по типу автомобиля.
+
+
+
+// Показать все автомобили конкретного производителя;
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE manufacturer = 'Canada'");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+// Создать фильтр для отображения автомобилей по указанному цвету;
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE color = 'blue'");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+// Создать фильтр по объёму двигателя;
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE engineVolume = 5.5");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+
+
+// Создать фильтр по типу автомобиля.
+            ResultSet carsSet = statement.executeQuery("SELECT * FROM Cars WHERE type = 'Universal'");
+            while (carsSet.next()) {
+                int id = carsSet.getInt("id");
+                String manufacturer = carsSet.getString("manufacturer");
+                String carName = carsSet.getString("carName");
+                float engineVolume = carsSet.getFloat("engineVolume");
+                int year = carsSet.getInt("year");
+                String color = carsSet.getString("color");
+                String type = carsSet.getString("type");
+
+                System.out.printf("id - %d; manufacturer - %s; carName - %s; engineVolume - %f, year - %d; color - %s; type - %s;\n", id, manufacturer, carName, engineVolume, year, color, type);
+            }
+
+
+
+
+
+
+Задание 5
+Добавьте к четвертому заданию следующую функциональность:
+ Добавление строки;
+ Удаление строки;
+ Обновление строки
+
+
+
+// Добавление строки;
+            statement.executeUpdate("INSERT INTO Cars(manufacturer, carName, engineVolume, year, color, type)" +
+                    "VALUES " +
+                    "('Ukraine', 'Tesla A33', 5.5, 2020, 'white', 'Universal')");
+
+
+// Удаление строки;
+	statement.executeUpdate("DELETE FROM Cars WHERE carName = 'Honda A33'");
+
+
+// Обновление строки
+	statement.executeUpdate("UPDATE Cars SET carName = 'BMW 777' WHERE id = 2");
+

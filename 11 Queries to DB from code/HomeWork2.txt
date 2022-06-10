@@ -1,0 +1,356 @@
+// Задание 1, 2 (create db "CoffeeShop", insert default values)
+
+public class Main {
+    public static void main(String[] args) throws ClassNotFoundException {
+        String url = "jdbc:mysql://localhost:3306/coffeeshop";
+        String username = "root";
+        String password = "1793";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             Statement statement = connection.createStatement()) {
+            
+            statement.executeUpdate("CREATE TABLE Drinks (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "nameEng VARCHAR(30) NOT NULL, " +
+                    "nameRu VARCHAR(30) NOT NULL, " +
+                    "price DECIMAL(10,2) NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO Drinks(nameEng, nameRu, price)" +
+                    "VALUES " +
+                    "('Espresso', 'Эспрессо', 40)," +
+                    "('Latte', 'Лате', 55.5)," +
+                    "('Cappuccino', 'Капучино', 50);");
+
+
+            statement.executeUpdate("CREATE TABLE Desserts (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "nameEng VARCHAR(30) NOT NULL, " +
+                    "nameRu VARCHAR(30) NOT NULL, " +
+                    "price DECIMAL(10,2) NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO Desserts(nameEng, nameRu, price)" +
+                    "VALUES " +
+                    "('Ice cream', 'Мороженное', 45.5)," +
+                    "('Strawberry cake', 'Клубничный торт', 75.5)," +
+                    "('Banana cake', 'Банановый торт', 75);");
+
+
+            statement.executeUpdate("CREATE TABLE EmployeePositions (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "name VARCHAR(15) NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO EmployeePositions(name)" +
+                    "VALUES ('Barista'), ('Waiter'), ('Confectioner');");
+
+
+            statement.executeUpdate("CREATE TABLE Employees (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "fullName VARCHAR(45) NOT NULL, " +
+                    "phone VARCHAR(15) NOT NULL UNIQUE, " +
+                    "email VARCHAR(30) NOT NULL UNIQUE, " +
+                    "positionId INT NOT NULL REFERENCES EmployeePositions(id) ON DELETE CASCADE " +
+                    ");");
+            statement.executeUpdate("INSERT INTO Employees(fullName, phone, email, positionId)" +
+                    "VALUES " +
+                    "('Ivanov Igor Igorovich', '+380934094350', 'igoryan208@gmail.com', 1)," +
+                    "('Petrov Ivan Ivanovich', '+380934094777', 'petro777@gmail.com', 2)," +
+                    "('Sidorova Maria Mitrofanovna', '+380978810201', 'motrya18@gmail.com', 3);");
+
+
+            statement.executeUpdate("CREATE TABLE Customers (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "fullName VARCHAR(45) NOT NULL, " +
+                    "phone VARCHAR(15) NOT NULL UNIQUE, " +
+                    "email VARCHAR(30) NOT NULL UNIQUE, " +
+                    "birth DATE NOT NULL, " +
+                    "discount INT NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO Customers(fullName, phone, email, birth, discount)" +
+                    "VALUES " +
+                    "('Alekseev Dmitro Igorovich', '+380934094355', 'yan208@gmail.com', '1995-04-11', 0)," +
+                    "('Petrova Ivanna Marievna', '+380934111177', 'mari@gmail.com', '2000-02-19', 10)," +
+                    "('Simonova Maria Vennina', '+380978881818', 'motrya18@gmail.com', '2002-10-01', 5);");
+
+
+            statement.executeUpdate("CREATE TABLE Orders (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "coffeesList VARCHAR(255), " +
+                    "coffeeCount INT, " +
+                    "dessertsList VARCHAR(255), " +
+                    "dessertsCount INT, " +
+                    "generalPrice DECIMAL(10,2) NOT NULL, " +
+                    "baristaId INT REFERENCES Employees(id) ON DELETE CASCADE, " +
+                    "waiterId INT REFERENCES Employees(id) ON DELETE CASCADE, " +
+                    "confectionerId INT REFERENCES Employees(id) ON DELETE CASCADE, " +
+                    "customerId INT NOT NULL REFERENCES Customers(id) ON DELETE CASCADE " +
+                    ");");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+// Task 3
+- Изменить цену на определенный вид кофе;
+- Изменить контактный, почтовый адрес кондитеру;
+- Изменить контактный телефон бариста;
+- Изменить процент скидки конкретного клиента.
+
+            statement.executeUpdate("UPDATE Drinks SET price = 47 WHERE nameEng = 'Espresso'");
+
+            statement.executeUpdate("UPDATE Employees " +
+                    "SET email = 'newemail@gmail.com', phone = '+380984030333' " +
+                    "WHERE positionId = (SELECT id FROM EmployeePositions WHERE name = 'Confectioner')");
+
+            statement.executeUpdate("UPDATE Employees " +
+                    "SET phone = '+380984030322' " +
+                    "WHERE positionId = (SELECT id FROM EmployeePositions WHERE name = 'Barista')");
+
+            statement.executeUpdate("UPDATE Customers " +
+                    "SET discount = 40 " +
+                    "WHERE id = 2");
+
+
+
+
+// Task 4:
+- Удалить информацию о конкретном десерте;
+- Удалите информацию об определенном официанте по причине увольнения;
+- Удалите информацию об определенном бариста по причине увольнения;
+- Удалите информацию о конкретном клиенте.
+
+
+            statement.executeUpdate("DELETE FROM Desserts WHERE id = 1");
+
+
+             statement.executeUpdate("CREATE TABLE EmployeesToFire (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                    "employeeId INT NOT NULL REFERENCES Employees(id) ON DELETE CASCADE, " +
+                    "reason VARCHAR(100) NOT NULL" +
+                    ");");
+            statement.executeUpdate("INSERT INTO EmployeesToFire(employeeId, reason)" +
+                    "VALUES " +
+                    "(1, 'not suitable')," +
+                    "(2, 'too lazy')," +
+                    "(3, 'just stupid');");
+
+
+            statement.executeUpdate("DELETE FROM Employees " +
+                    "WHERE " +
+                    "positionId = (SELECT id FROM EmployeePositions WHERE name = 'Waiter') " +
+                    "AND " +
+                    "id = (SELECT employeeId FROM EmployeesToFire WHERE reason = 'too lazy')");
+            statement.executeUpdate("DELETE FROM Employees " +
+                    "WHERE " +
+                    "positionId = (SELECT id FROM EmployeePositions WHERE name = 'Barista') " +
+                    "AND " +
+                    "id = (SELECT employeeId FROM EmployeesToFire WHERE reason = 'not suitable')");
+
+            statement.executeUpdate("DELETE FROM Customers WHERE id = 1");
+
+
+
+// Task 5
+- Покажите все напитки;
+- Покажите все десерты;
+- Покажите информацию обо всех бариста;
+- Покажите информацию обо всех официантах.
+
+
+            ResultSet drinksSet = statement.executeQuery("SELECT * FROM Drinks;");
+            while (drinksSet.next()) {
+                int id = drinksSet.getInt("id");
+                String nameEng = drinksSet.getString("nameEng");
+                String nameRu = drinksSet.getString("nameRu");
+                float price = drinksSet.getFloat("price");
+
+                System.out.printf("id - %d; nameEng - %s; nameRu - %s; price - %f\n", id, nameEng, nameRu, price);
+            }
+
+            ResultSet dessertsSet = statement.executeQuery("SELECT * FROM Desserts;");
+            while (dessertsSet.next()) {
+                int id = dessertsSet.getInt("id");
+                String nameEng = dessertsSet.getString("nameEng");
+                String nameRu = dessertsSet.getString("nameRu");
+                float price = dessertsSet.getFloat("price");
+
+                System.out.printf("id - %d; nameEng - %s; nameRu - %s; price - %f\n", id, nameEng, nameRu, price);
+            }
+
+            ResultSet baristasSet = statement.executeQuery("SELECT * FROM Employees " +
+                    "WHERE positionId = (SELECT id FROM EmployeePositions WHERE name = 'Barista');");
+            while (baristasSet.next()) {
+                int id = baristasSet.getInt("id");
+                String fullName = baristasSet.getString("fullName");
+                String phone = baristasSet.getString("phone");
+                String email = baristasSet.getString("email");
+
+                System.out.printf("id - %d; fullName - %s; phone - %s; email - %s\n", id, fullName, phone, email);
+            }
+
+            ResultSet waitersSet = statement.executeQuery("SELECT * FROM Employees " +
+                    "WHERE positionId = (SELECT id FROM EmployeePositions WHERE name = 'Waiter');");
+            while (waitersSet.next()) {
+                int id = waitersSet.getInt("id");
+                String fullName = waitersSet.getString("fullName");
+                String phone = waitersSet.getString("phone");
+                String email = waitersSet.getString("email");
+
+                System.out.printf("id - %d; fullName - %s; phone - %s; email - %s\n", id, fullName, phone, email);
+            }
+
+
+
+
+// Task 6
+Добавьте к базе данных «Кофейня» из практического задания следующие запросы: 
+- Добавление информации о новом заказе кофе; 
+- Добавление информации о новом заказе десерта;
+- Добавление информации о новом виде кофе.
+
+
+            statement.executeUpdate("INSERT INTO Orders(coffeesList, coffeeCount, generalPrice, baristaId, waiterId, customerId)" +
+                    "VALUES ('Espresso', 1, 47, 1, 2, 1)");
+
+            statement.executeUpdate("INSERT INTO Orders(dessertsList, dessertsCount, generalPrice, confectionerId, waiterId, customerId)" +
+                    "VALUES ('Strawberry cake, Banana cake', 2, 150.5, 3, 2, 2)");
+
+
+            statement.executeUpdate("INSERT INTO Drinks(nameEng, nameRu, price)" +
+                    "VALUES ('Mocachino', 'Мокачино', 61);");
+
+
+
+
+
+// Task 7
+ Добавьте к базе данных «Кофейня» из практического задания следующие запросы:
+- Изменить название уже существующего вида кофе;
+- Изменить информацию в существующем заказе; 
+- Изменить название уже существующего десерта.
+
+
+            statement.executeUpdate("UPDATE Drinks " +
+                    "SET nameEng = 'Mocachino Max', " +
+                    "nameRu = 'Мокачино Макс'" +
+                    "WHERE nameEng = 'Mocachino'");
+
+            statement.executeUpdate("UPDATE Orders " +
+                    "SET generalPrice = 49.99 " +
+                    "WHERE id = 1");
+
+            statement.executeUpdate("UPDATE Desserts " +
+                    "SET nameEng = 'Chokko cake', " +
+                    "nameRu = 'Чокко кейк'" +
+                    "WHERE nameEng = 'Banana cake'");
+
+
+
+
+// Task 8
+- Удалить конкретный заказ;
+- Удалить заказы конкретного клиента;
+
+	    statement.executeUpdate("DELETE FROM Orders WHERE id = 1");
+
+            statement.executeUpdate("DELETE FROM Orders WHERE customerId = 2");
+
+
+
+
+
+// Task 9
+- Показать все заказы конкретного баристо
+- Показать все заказы конкретного официанта;
+- Показать все заказы конкретного клиента. 
+
+
+            ResultSet baristasSet = statement.executeQuery("SELECT * FROM Orders " +
+                    "WHERE baristaId = (SELECT id FROM EmployeePositions WHERE name = 'Barista');");
+            while (baristasSet.next()) {
+                int id = baristasSet.getInt("id");
+
+                String coffeesList = baristasSet.getString("coffeesList");
+                if(coffeesList == null) {
+                    coffeesList = "none";
+                }
+                int coffeeCount = baristasSet.getInt("coffeeCount");
+                String dessertsList = baristasSet.getString("dessertsList");
+                if(dessertsList == null) {
+                    dessertsList = "none";
+                }
+                int dessertsCount = baristasSet.getInt("dessertsCount");
+                float generalPrice = baristasSet.getFloat("generalPrice");
+
+
+
+                System.out.printf("id - %d; coffeesList - %s; coffeeCount - %d; dessertsList - %s; dessertsCount -  %d; generalPrice - %s\n", id, coffeesList, coffeeCount, dessertsList, dessertsCount, generalPrice);
+            }
+
+            ResultSet baristasSet = statement.executeQuery("SELECT * FROM Orders " +
+                    "WHERE waiterId = (SELECT id FROM EmployeePositions WHERE name = 'Waiter');");
+            while (baristasSet.next()) {
+                int id = baristasSet.getInt("id");
+
+                String coffeesList = baristasSet.getString("coffeesList");
+                if(coffeesList == null) {
+                    coffeesList = "none";
+                }
+                int coffeeCount = baristasSet.getInt("coffeeCount");
+                String dessertsList = baristasSet.getString("dessertsList");
+                if(dessertsList == null) {
+                    dessertsList = "none";
+                }
+                int dessertsCount = baristasSet.getInt("dessertsCount");
+                float generalPrice = baristasSet.getFloat("generalPrice");
+
+
+
+                System.out.printf("id - %d; coffeesList - %s; coffeeCount - %d; dessertsList - %s; dessertsCount -  %d; generalPrice - %s\n", id, coffeesList, coffeeCount, dessertsList, dessertsCount, generalPrice);
+            }
+
+
+            ResultSet baristasSet = statement.executeQuery("SELECT * FROM Orders " +
+                    "WHERE customerId = 2;");
+            while (baristasSet.next()) {
+                int id = baristasSet.getInt("id");
+
+                String coffeesList = baristasSet.getString("coffeesList");
+                if (coffeesList == null) {
+                    coffeesList = "none";
+                }
+                int coffeeCount = baristasSet.getInt("coffeeCount");
+                String dessertsList = baristasSet.getString("dessertsList");
+                if (dessertsList == null) {
+                    dessertsList = "none";
+                }
+                int dessertsCount = baristasSet.getInt("dessertsCount");
+                float generalPrice = baristasSet.getFloat("generalPrice");
+
+
+                System.out.printf("id - %d; coffeesList - %s; coffeeCount - %d; dessertsList - %s; dessertsCount -  %d; generalPrice - %s\n", id, coffeesList, coffeeCount, dessertsList, dessertsCount, generalPrice);
+            }
+
+
+
+
+// Task 10
+ - Добавление строки;
+ - Удаление строки;
+ - Обновление строки.
+
+
+        statement.executeUpdate("INSERT INTO Drinks(nameEng, nameRu, price)" +
+                   "VALUES ('Mocachino', 'Мокачино', 61);");
+	
+	statement.executeUpdate("DELETE FROM Orders WHERE id = 1");
+
+	statement.executeUpdate("UPDATE Drinks SET price = 47 WHERE nameEng = 'Espresso'");
+
+
+

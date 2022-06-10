@@ -1,0 +1,376 @@
+Задание 1
+Пользователь с клавиатуры вводит путь к файлу. После
+чего содержимое файла отображается на экране.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        // consider that file exists in project root folder (for example: C:\Users\user\Desktop\STEP (part2)\Java\workSpace)
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> "); // input: test.txt
+        String path = scanner.next();
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    int lineCounter = 0;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        System.out.println(line);
+                        lineCounter++;
+                    }
+                } catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+
+}
+
+
+
+
+Задание 3
+Пользователь с клавиатуры вводит путь к файлу и слово
+для поиска. После работы программы на экран отображается количество раз сколько слово встречается в файле.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+ 	// consider that file exists in project root folder (for example: C:\Users\user\Desktop\STEP (part2)\Java\workSpace)
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> "); // input: test.txt
+        String path = scanner.next();
+        System.out.print("Enter word --> ");
+        String searchWord = scanner.next();
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    int lineCounter = 0;
+                    int matchesCount = 0;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        // if there is a search word in line
+                        if(line.toLowerCase().contains(searchWord.toLowerCase())) {
+                            int fromIdx = 0;
+                            int lastIdx = 0;
+                            // check how many keywords in line
+                            while (true) {
+                                lastIdx = line.toLowerCase().indexOf(searchWord.toLowerCase(), fromIdx);
+                                if(lastIdx == -1) {
+                                    break;
+                                }
+                                fromIdx = lastIdx + searchWord.length() + 1;
+                                matchesCount++;
+                            }
+                        }
+                        lineCounter++;
+                    }
+                    System.out.printf("A word %s occurred in file %d times", searchWord, matchesCount);
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+Задание 4
+Пользователь с клавиатуры вводит путь к файлу. После
+работы программы на экран отображается количество
+букв, чисел и знаков препинания в файле.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+	// consider that file exists in project root folder (for example: C:\Users\user\Desktop\STEP (part2)\Java\workSpace)
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> "); // input: test.txt
+        String path = scanner.next();
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    int lineCounter = 0;
+                    ArrayList<Character> signs = new ArrayList<>(Arrays.asList('.', ',', '?', '!', ':', ';'));
+                    int countLetters = 0;
+                    int countDigits = 0;
+                    int countSigns = 0;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        for (int i = 0; i < line.length(); i++) {
+                            char sign = line.charAt(i);
+                            if(signs.contains(sign)) {
+                                countSigns++;
+                            }
+                            else if(sign >= 48 && sign <= 57) {
+                                countDigits++;
+                            }
+                            else if(sign >= 65 && sign <= 90 || sign >= 97 && sign <= 122) {
+                                countLetters++;
+                            }
+                        }
+                        lineCounter++;
+                    }
+                    System.out.printf("A file contains letters: %d, digits: %d, signs %d", countLetters, countDigits, countSigns);
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+Задание 5
+Пользователь с клавиатуры вводит путь к файлу, слово
+для поиска и слово для замены. Программа ищет искомое
+слово и производит замену на второе слово.
+После работы программы на экран отображается
+отчет с информацией о количестве замен.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> "); // input: test.txt
+        String path = scanner.next();
+        System.out.print("Enter word to replace --> ");
+        String searchWord = scanner.next();
+        System.out.print("Enter new word --> ");
+        String newWord = scanner.next();
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    int lineCounter = 0;
+                    int replacesCount = 0;
+                    // we will write result in string line by line
+                    StringBuilder result = new StringBuilder();
+                    while ((line = bufferedReader.readLine()) != null) {
+                        String replacedLine = line; 
+                        // if line contains search word - change replacedLine
+                        if(line.toLowerCase().contains(searchWord.toLowerCase())) {
+                            int fromIdx = 0;
+                            int idxStart = 0;
+                            // check all keywords in line
+                            while (true) {
+                                idxStart = line.toLowerCase().indexOf(searchWord.toLowerCase(), fromIdx);
+                                if(idxStart == -1) {
+                                    break;
+                                }
+                                replacedLine = line.replace(searchWord, newWord);
+                                fromIdx = idxStart + searchWord.length() + 1;
+                                replacesCount++;
+                            }
+                        }
+                        result.append(replacedLine + "\n");
+                        lineCounter++;
+                    }
+                    // write result in the same file
+                    FileWriter fileWriter = new FileWriter(file);
+                    fileWriter.write(result.toString());
+                    fileWriter.flush();
+                    fileWriter.close();
+                    System.out.println("replacesCount: " + replacesCount);
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+Задание 7
+Пользователь с клавиатуры вводит путь к файлу
+и список запрещенных слов. Программа должна вырезать
+запрещенные слова из файла.
+После работы программы на экран отображается
+отчет с информацией о количестве вырезанных слов
+с детализацией по каждому слову
+
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> "); // input: test.txt
+        String path = scanner.next();
+        System.out.print("How many forbidden words you want to cut from file --> ");
+        int countWords = scanner.nextInt();
+        ArrayList<String> forbiddenWords = new ArrayList<>();
+        for (int i = 0; i < countWords; i++) {
+            System.out.print("Enter forbidden word --> ");
+            String nextWord = scanner.next();
+            forbiddenWords.add(nextWord);
+        }
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    int lineCounter = 0;
+                    int replacesCount = 0;
+                    // we will write result in string line by line
+                    StringBuilder result = new StringBuilder();
+                    while ((line = bufferedReader.readLine()) != null) {
+                        String replacedLine = line;
+                        // if line contains one of forbiddenWords - change replacedLine
+                        for (int i = 0; i < forbiddenWords.size(); i++) {
+                            String searchWord = forbiddenWords.get(i);
+                            if(line.toLowerCase().contains(searchWord.toLowerCase())) {
+                                int fromIdx = 0;
+                                int idxStart = 0;
+                                // check all keywords in line
+                                while (true) {
+                                    idxStart = line.toLowerCase().indexOf(searchWord.toLowerCase(), fromIdx);
+                                    if(idxStart == -1) {
+                                        break;
+                                    }
+                                    replacedLine = line.replace(searchWord, "");
+                                    line = replacedLine;
+                                    fromIdx = idxStart + searchWord.length() + 1;
+                                    replacesCount++;
+                                }
+
+                            }
+                        }
+
+                        result.append(replacedLine + "\n");
+                        lineCounter++;
+                    }
+                    // write result in the same file
+                    FileWriter fileWriter = new FileWriter(file);
+                    fileWriter.write(result.toString());
+                    fileWriter.flush();
+                    fileWriter.close();
+                    System.out.println("replacesCount: " + replacesCount);
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+

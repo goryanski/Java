@@ -1,0 +1,115 @@
+Необходимо разработать приложение, которое позволит сохранять информацию о логинах пользователей
+и их паролях. Каждому пользователю соответствует
+пара логин — пароль. При старте приложение отображается меню:
+Практические задания
+1. Добавить нового пользователя;
+2. Удалить существующего пользователя;
+3. Проверить существует ли пользователь;
+4. Изменить логин существующего пользователя;
+5. Изменить пароль существующего пользователя;
+В зависимости от выбора пользователя выполняется
+действие, после чего меню отображается снова.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        TreeMap<String, String> users = new TreeMap<String, String>();
+        users.put("Igor", "12345");
+        users.put("Vasya", "7777");
+        users.put("Ivan", "9989");
+
+        Scanner scanner = new Scanner(System.in);
+        int choose = 0;
+        while (choose != -1) {
+            renderMenu();
+            System.out.print("Your choose --> ");
+            choose = scanner.nextInt();
+            switch (choose) {
+                case 1 -> {
+                    System.out.print("Enter new login --> ");
+                    String login = scanner.next();
+                    System.out.print("Enter new password --> ");
+                    String password = scanner.next();
+                    users.put(login, password);
+                }
+                case 2 -> {
+                    System.out.print("Enter login you want to delete --> ");
+                    String login = scanner.next();
+                    if(users.containsKey(login)) {
+                        users.remove(login);
+                    }
+                    else {
+                        System.out.println("Such user does not exist");
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Enter login you want to check --> ");
+                    String login = scanner.next();
+                    if(users.containsKey(login)) {
+                        System.out.println("User exists");
+                    }
+                    else {
+                        System.out.println("Such user does not exist");
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Enter login you want to change --> ");
+                    String login = scanner.next();
+                    if(users.containsKey(login)) {
+                        System.out.print("Enter new login --> ");
+                        String newLogin = scanner.next();
+                        String oldPassword = users.get(login);
+                        users.remove(login);
+                        users.put(newLogin, oldPassword);
+                    }
+                    else {
+                        System.out.println("Such user does not exist");
+                    }
+                }
+                case 5 -> {
+                    System.out.print("Enter login for password you want to change --> ");
+                    String login = scanner.next();
+                    if(users.containsKey(login)) {
+                        System.out.print("Enter new password --> ");
+                        String newPassword = scanner.next();
+                        users.put(login, newPassword);
+                    }
+                    else {
+                        System.out.println("Such user does not exist");
+                    }
+                }
+                case 6 -> printMap(users);
+                case 7 -> choose = -1;
+            }
+        }
+    }
+
+    public static void printMap(TreeMap<String, String> users) {
+        System.out.println("\nAll users:");
+        Set<Map.Entry<String, String>> set = users.entrySet();
+        Iterator<Map.Entry<String, String>> iterator = set.iterator();
+
+        while(iterator.hasNext()) {
+            Map.Entry me = (Map.Entry)iterator.next();
+            System.out.println("login: " + me.getKey() + ", password: " + me.getValue());
+        }
+    }
+    public static void renderMenu() {
+        System.out.println(
+                """
+
+
+                        1. Добавить нового пользователя;
+                        2. Удалить существующего пользователя;
+                        3. Проверить существует ли пользователь;
+                        4. Изменить логин существующего пользователя;
+                        5. Изменить пароль существующего пользователя;
+                        6. Показать содержимое списка;
+                        7. Exit
+                        ==============================================
+
+                        """);
+    }
+}

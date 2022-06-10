@@ -1,0 +1,100 @@
+1. Snail and pole
+	Snail creeps up the vertical pole of height H feets. Each day it goes A feets up, and each night it goes B feets down. 
+	On which day will the snail reach the top of the pole?
+	Input data format: On the input the program receives non-negative integers H, A, B, where H > B and A > B. 
+	Every integer does not exceed 100.
+
+	import java.util.Scanner;
+	public class Main {
+  	public static void main(String[] args) {
+    		//put your code here
+      		Scanner console = new Scanner(System.in);
+        	int height = console.nextInt();
+        	int dayProgress = console.nextInt();
+        	int nightRegresss = console.nextInt();
+
+        	int daysCount = 1; // at least one day
+        	int totalProgress = 0;
+        	// Snail can reach the top before night, so
+        	while(true) {
+            	totalProgress += dayProgress;
+            	if(height - totalProgress <= 0) {
+                	break;
+            	}
+            	totalProgress -= nightRegresss;
+            	daysCount++;
+        }
+        System.out.println(daysCount);
+  }
+}
+
+
+2. Queens in Chess
+	Given coordinates of two queens on a chessboard, determine if they are attacking each other or not. 
+	(A chess queen attacks in three ways: along its rank, in both directions; along its file, in both directions, 
+	and diagonally in all four directions.)
+
+	Input data format
+	User inputs two pairs of integer coordinates: x1, y1, x2, y2, all in the interval [1,8].
+
+	Output data format
+	Type "YES" (uppercase) if the two queens are attacking each other, or "NO" if they don't.
+
+	Hint: You may need to use the following method, which calculates the absolute value of a number:
+	Math.abs(n)
+
+	solution:
+	import java.util.Scanner;
+	import java.math.*;
+	public class Main {
+
+  	public static void main(String[] args) {
+    		//put your code here
+      		Scanner scanner = new Scanner(System.in);
+      
+      		//point for queen1
+	        int x1 = scanner.nextInt();
+      		int y1 = scanner.nextInt();
+      
+      		//point for queen2
+      		int x2 = scanner.nextInt();
+      		int y2 = scanner.nextInt();
+      
+      		// x is rank, y is file
+      		if ((x1 == x2) || (y1 == y2) || (Math.abs(x1 - x2) == Math.abs(y1 - y2))) {
+			// vertical and horizontal => (x1 == x2) || (y1 == y2)
+			// any diagonal => (Math.abs(x1 - x2) == Math.abs(y1 - y2))
+          		System.out.println("YES"); 
+      		} else {
+          		System.out.println("NO");
+      		}
+  	}
+	}
+
+
+
+3. Chocolate bar
+	A chocolate bar has a rectangular shape, divided into NxM segments. You can break down this chocolate bar into two parts by a 
+	single straight line (only once). Determine if you can break off exactly K segments of chocolate. (Each segment is 1x1.).
+	Input data format:
+	User inputs three integers: N, M, K.
+	Output data format:
+	The program must output one of the two words: YES or NO.
+
+	import java.util.Scanner;
+	public class Main {
+  		public static void main(String[] args) {
+    			Scanner scanner = new Scanner(System.in);
+    			int rows = scanner.nextInt();
+    			int columns = scanner.nextInt();
+    			int segments = scanner.nextInt();
+
+			// We need the segments to be divisible either by the rows or the columns 
+			// and also amount of segments (K) can't be greater then total amount of segments (NxM)
+    			if ((segments % rows == 0 || segments % columns == 0) && columns * rows > segments){
+      				System.out.println("YES");
+    			} else {
+      				System.out.println("NO");
+    			}
+  		}
+	}

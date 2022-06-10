@@ -1,0 +1,362 @@
+Задание 1
+Создайте класс Array, который представляет
+собой массив, позволяющий хранить объекты
+типа int. Необходимо реализовать:
+■ заполнение массива с клавиатуры;
+■ заполнение массива случайными числами;
+■ отображение массива;
+■ поиск максимального значения;
+■ поиск минимального значения;
+■ подсчет среднеарифметического значения;
+■ сортировка массива по возрастанию;
+■ сортировка массива по убыванию;
+■ поиск значения в массиве, используя бинарный поиск;
+■ замена значения в массиве на новое значение.
+
+
+
+
+import java.util.Random;
+import java.util.Scanner;
+
+class MyArray {
+    int[] array;
+    Scanner scanner;
+
+    MyArray() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void fillArrayFromScratch() {
+        System.out.print("Enter size of array --> ");
+        int size = scanner.nextInt();
+        this.array = new int[size];
+        for (int i = 0; i < size; i++) {
+            System.out.print("Enter number --> ");
+            this.array[i] = scanner.nextInt();
+        }
+    }
+
+    public void fillRandomArray() {
+        System.out.print("Enter size of array --> ");
+        int size = scanner.nextInt();
+        this.array = new int[size];
+        Random random = new Random();
+        int min = 10;
+        int max = 99;
+        for (int i = 0; i < size; i++) {
+            this.array[i] = random.nextInt(max-min+1) + min;
+        }
+    }
+
+    public void printArray() {
+        System.out.print("[ ");
+        for (int item : this.array) {
+            System.out.print(item + " ");
+        }
+        System.out.print("]\n");
+    }
+
+    public void sortArrayByAscending() {
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = array.length - 1; j > i; j--) {
+                if (array[j - 1] > array[j]) {
+                    int tmp = array[j - 1];
+                    array[j - 1] = array[j];
+                    array[j] = tmp;
+                }
+            }
+        }
+    }
+
+    public void sortArrayByDescending() {
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = array.length - 1; j > i; j--) {
+                if (array[j - 1] < array[j]) {
+                    int tmp = array[j - 1];
+                    array[j - 1] = array[j];
+                    array[j] = tmp;
+                }
+            }
+        }
+    }
+
+    public void showMinValue() {
+        System.out.println("\nmin value of array is " + this.array[0]);
+    }
+    public void showMaxValue() {
+        System.out.println("max value of array is " + this.array[this.array.length - 1]);
+    }
+    public void showAverage() {
+        System.out.println("average value of array is " + (int)(array[array.length - 1] / 2));
+    }
+
+    public int search(int key) {
+        int left = 0;
+        int right = this.array.length - 1;
+        int middle;
+        int fountIdx = -1;
+        do
+        {
+            middle = (left + right) / 2;
+            if (this.array[middle] == key)
+            {
+                fountIdx = middle;
+                break;
+            }
+            else if (this.array[middle] < key)
+                left = middle + 1;
+            else
+                right = middle - 1;
+        } while (left <= right);
+
+        return fountIdx;
+    }
+
+    public void replaceTo(int newValue, int oldValue) {
+        int idx = this.search(oldValue);
+        if (idx == -1) {
+            System.out.println("There is no such number");
+        }
+        else {
+            this.array[idx] = newValue;
+        }
+    }
+}
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        MyArray array = new MyArray();
+
+        System.out.println("1) fill array with user input and show it");
+        array.fillArrayFromScratch();
+        array.printArray();
+
+        System.out.println("\n2) fill random array and show it");
+        array.fillRandomArray();
+        array.printArray();
+
+        System.out.println("\n3) sort array by ascending and show it");
+        array.sortArrayByAscending();
+        array.printArray();
+
+        // min, max, avg
+        array.showMinValue();
+        array.showMaxValue();
+        array.showAverage();
+
+
+        System.out.println("\n4) binary search");
+        System.out.print("Enter number you want to search --> ");
+        int key = scanner.nextInt();
+        int idx = array.search(key);
+        if (idx == -1) {
+            System.out.println("There is no such number");
+        }
+        else {
+            System.out.printf("Index ot this element is %d\n", idx);
+        }
+
+
+        System.out.println("\n5) replace value in array");
+        System.out.print("Enter new value you want to insert to array --> ");
+        int value = scanner.nextInt();
+        System.out.print("Enter the number you want to replace --> ");
+        int replaceValue = scanner.nextInt();
+        array.replaceTo(value, replaceValue);
+        array.printArray();
+
+
+        System.out.println("\n6) sort array by descending and show it");
+        array.sortArrayByDescending();
+        array.printArray();
+    }
+}
+
+
+
+
+
+
+
+
+
+Задание 2
+Создайте класс «Матрица». Необходимо
+реализовать:
+■ заполнение матрицы с клавиатуры;
+■ заполнение случайными значениями;
+■ отображение матрицы;
+■ арифметические операции +, –, *, /;
+■ поиск максимального и минимального элемента;
+■ подсчет среднеарифметического значения.
+
+
+
+
+import java.util.Random;
+import java.util.Scanner;
+
+class Matrix {
+    double[][] array;
+    int rows;
+    int cols;
+    Scanner scanner;
+
+    Matrix() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void fillArrayFromScratch() {
+        System.out.print("Enter rows count --> ");
+        this.rows = scanner.nextInt();
+        System.out.print("Enter cols count --> ");
+        this.cols = scanner.nextInt();
+
+        System.out.print("Enter matrix:\n");
+        this.array = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print("Enter number --> ");
+                array[i][j] = scanner.nextDouble();
+            }
+        }
+    }
+
+    public void fillRandomArray() {
+        this.rows = 4;
+        this.cols = 4;
+
+        this.array = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                array[i][j] = this.getRandomDouble(1, 9);
+            }
+        }
+    }
+
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(array[i][j] + "   ");
+            }
+            System.out.println();
+        }
+        System.out.println("\n\n");
+    }
+
+    public void addMatrix(double[][] arrayToAdd) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double result = array[i][j] + arrayToAdd[i][j];
+                array[i][j] = Math.round(result * 100.0) / 100.0;
+            }
+        }
+    }
+
+    public void subtractMatrix(double[][] arrayToSubtract) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double result = array[i][j] - arrayToSubtract[i][j];
+                array[i][j] = Math.round(result * 100.0) / 100.0;
+            }
+        }
+    }
+
+    public void multiplyMatrix(double[][] arrayToMultiply) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double result = array[i][j] * arrayToMultiply[i][j];
+                array[i][j] = Math.round(result * 100.0) / 100.0;
+            }
+        }
+    }
+
+    public void divideMatrix(double[][] arrayToDivide) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                double result = array[i][j] / arrayToDivide[i][j];
+                array[i][j] = Math.round(result * 100.0) / 100.0;
+            }
+        }
+    }
+
+    public double getMinValue() {
+        double min = array[0][0];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if(array[i][j] < min) {
+                    min = array[i][j];
+                }
+            }
+        }
+        return min;
+    }
+    public double getMaxValue() {
+        double max = array[0][0];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if(array[i][j] > max) {
+                    max = array[i][j];
+                }
+            }
+        }
+        return max;
+    }
+    public double getAverageValue() {
+        double avg = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                avg += array[i][j];
+            }
+        }
+        double result = avg / (cols * rows);
+        return Math.round(result * 100.0) / 100.0;
+    }
+
+
+    private double getRandomDouble(int min, int max) {
+        Random r = new Random();
+        double x = min + (max - min) * r.nextDouble();
+        return Math.round(x * 100.0) / 100.0; // round to 2 digit after point
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        // fill array with user input and show it
+        Matrix matrix1 = new Matrix();
+        matrix1.fillArrayFromScratch();
+        System.out.println("matrix with user input:");
+        matrix1.printMatrix();
+
+
+        // math operations
+        Matrix matrix2 = new Matrix();
+        matrix2.fillRandomArray();
+        System.out.println("matrix2:");
+        matrix2.printMatrix();
+
+        Matrix matrix3 = new Matrix();
+        matrix3.fillRandomArray();
+        System.out.println("matrix3:");
+        matrix3.printMatrix();
+
+        matrix2.addMatrix(matrix3.array);
+        // or matrix2.subtractMatrix(matrix3.array);
+        // or matrix2.multiplyMatrix(matrix3.array);
+        // or matrix2.divideMatrix(matrix3.array);
+        matrix2.printMatrix();
+
+        
+        System.out.println("Min value of matrix3 is " + matrix3.getMinValue());
+        System.out.println("Max value of matrix3 is " + matrix3.getMaxValue());
+        System.out.println("Average value of matrix3 is " + matrix3.getAverageValue());
+    }
+}

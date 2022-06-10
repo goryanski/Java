@@ -1,0 +1,502 @@
+Задание 1
+Пользователь с клавиатуры вводит значения в массив. После чего запускаются две потока. Первый поток
+находит максимум в массиве. Второй поток находит минимум в массиве. Результаты вычислений возвращаются
+в метод main.
+
+
+
+
+import java.util.*;
+import java.util.concurrent.*;
+
+class MaxFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public MaxFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+       Integer max = array.get(0);
+        for (int i = 1; i < array.size(); i++) {
+            if(array.get(i) > max) {
+                max = array.get(i);
+            }
+        }
+        return max;
+    }
+}
+class MinFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public MinFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Integer min = array.get(0);
+        for (int i = 1; i < array.size(); i++) {
+            if(array.get(i) < min) {
+                min = array.get(i);
+            }
+        }
+        return min;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("How many elements you want to add in the array? --> ");
+        int elementsCount = scanner.nextInt();
+        ArrayList<Integer> array = new ArrayList<>();
+        for (int i = 0; i < elementsCount; i++) {
+            System.out.print("Enter element --> ");
+            int element =scanner.nextInt();
+            array.add(element);
+        }
+
+        int treadsNumber = 1;
+        ThreadPoolExecutor maxExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+        ThreadPoolExecutor minExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+
+        MaxFinder maxFinder = new MaxFinder(array);
+        MinFinder minFinder = new MinFinder(array);
+        Future<Integer> maxArrayValue = maxExecutor.submit(maxFinder);
+        Future<Integer> minArrayValue = minExecutor.submit(minFinder);
+        try {
+            System.out.print("maxArrayValue is: " + maxArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    maxArrayValue.isDone() + "]");
+            maxExecutor.shutdown();
+            System.out.print("minArrayValue is: " + minArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    minArrayValue.isDone() + "]");
+            minExecutor.shutdown();
+        } catch (InterruptedException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        } catch (ExecutionException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+}
+
+
+
+
+
+
+
+Задание 2
+Пользователь с клавиатуры вводит значения в массив.
+После чего запускаются две потока. Первый поток находит сумму элементов в массиве. Второй поток находит
+среднеарифметическое в массиве. Результаты вычислений
+возвращаются в метод main.
+
+
+
+
+import java.util.*;
+import java.util.concurrent.*;
+
+class SumFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public SumFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+       Integer sum = 0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum;
+    }
+}
+class AvgFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public AvgFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Integer sum = 0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum / array.size();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("How many elements you want to add in the array? --> ");
+        int elementsCount = scanner.nextInt();
+        ArrayList<Integer> array = new ArrayList<>();
+        for (int i = 0; i < elementsCount; i++) {
+            System.out.print("Enter element --> ");
+            int element =scanner.nextInt();
+            array.add(element);
+        }
+
+        int treadsNumber = 1;
+        ThreadPoolExecutor sumExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+        ThreadPoolExecutor avgExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+
+        SumFinder sumFinder = new SumFinder(array);
+        AvgFinder avgFinder = new AvgFinder(array);
+        Future<Integer> sumArrayValue = sumExecutor.submit(sumFinder);
+        Future<Integer> avgArrayValue = avgExecutor.submit(avgFinder);
+        try {
+            System.out.print("sumArrayValue is: " + sumArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    sumArrayValue.isDone() + "]");
+            sumExecutor.shutdown();
+            System.out.print("avgArrayValue is: " + avgArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    avgArrayValue.isDone() + "]");
+            avgExecutor.shutdown();
+        } catch (InterruptedException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        } catch (ExecutionException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+}
+
+
+
+
+
+
+
+
+Задание 3
+При старте приложения запускаются три потока. Первый поток заполняет массив случайными числами. Два
+других потока ожидают заполнения. Когда массив заполнен оба потока запускаются. Первый поток находит сумму
+элементов массива, второй поток среднеарифметическое
+значение в массиве. Полученный массив, сумма и среднеарифметическое возвращаются в метод main, где должны
+быть отображены.
+
+
+
+
+class ArrayFiller implements Callable<ArrayList<Integer>> {
+    ArrayList<Integer> array;
+    int size;
+
+    public ArrayFiller(int size) {
+        this.size = size;
+        array = new ArrayList<>(size);
+    }
+
+    @Override
+    public ArrayList<Integer> call() throws Exception {
+        Random random = new Random();
+        int min = 1;
+        int max = 20;
+        for (int i = 0; i < size; i++) {
+            array.add(random.nextInt(max-min+1) + min);
+        }
+        return array;
+    }
+}
+
+class SumFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public SumFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+       Integer sum = 0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum;
+    }
+}
+class AvgFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public AvgFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Integer sum = 0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum / array.size();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int treadsNumber = 1;
+        ThreadPoolExecutor fillExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+        ArrayFiller filler = new ArrayFiller(10);
+        Future<ArrayList<Integer>> array = fillExecutor.submit(filler);
+
+        try {
+            System.out.print("array is: " + array.get());
+            System.out.println(" (task completion status is " +
+                    array.isDone() + ")");
+            fillExecutor.shutdown();
+
+            ThreadPoolExecutor sumExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+            ThreadPoolExecutor avgExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(treadsNumber);
+            SumFinder sumFinder = new SumFinder(array.get());
+            AvgFinder avgFinder = new AvgFinder(array.get());
+            Future<Integer> sumArrayValue = sumExecutor.submit(sumFinder);
+            Future<Integer> avgArrayValue = avgExecutor.submit(avgFinder);
+
+            System.out.print("sumArrayValue is: " + sumArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    sumArrayValue.isDone() + "]");
+            sumExecutor.shutdown();
+            System.out.print("avgArrayValue is: " + avgArrayValue.get());
+            System.out.println(" [task completion status is " +
+                    avgArrayValue.isDone() + "]");
+            avgExecutor.shutdown();
+        } catch (InterruptedException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        } catch (ExecutionException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+}
+
+
+
+
+
+
+Задание 4
+Пользователь с клавиатуры вводит путь к файлу. После
+чего запускаются три потока. Первый поток заполняет
+файл случайными числами. Два других потока ожидают
+заполнения. Когда файл заполнен оба потока стартуют.
+Первый поток находит все простые числа, второй поток
+факториал каждого числа в файле. Результаты поиска
+каждый поток должен записать в новый файл. В методе
+main необходимо отобразить статистику выполненных
+операций.
+
+
+
+class FileFiller implements Runnable {
+    String fileName;
+    int countNumbers;
+    Object locker;
+    public FileFiller(String fileName, int countNumbers, Object locker) {
+        this.fileName = fileName;
+        this.countNumbers = countNumbers;
+        this.locker = locker;
+    }
+
+    @Override
+    public void run() {
+        synchronized(locker) {
+            ArrayList<Integer> array = new ArrayList<>(countNumbers);
+            Random random = new Random();
+            int min = 1;
+            int max = 20;
+            for (int i = 0; i < countNumbers; i++) {
+                array.add(random.nextInt(max-min+1) + min);
+            }
+            serialize(array, fileName);
+            locker.notifyAll();
+        }
+    }
+}
+
+class SimpleNumbersFinder implements Runnable {
+    ArrayList<Integer> array;
+    Object locker;
+
+    public SimpleNumbersFinder(String fileName, Object locker) {
+        this.array = deserialize(fileName);
+        this.locker = locker;
+    }
+
+    @Override
+    public void run() {
+        synchronized(locker) {
+            try {
+                locker.wait();
+                ArrayList<Integer> simpleNums = new ArrayList<>();
+                for (Integer num : array) {
+                    if(Main.checkSimple(num)) {
+                        simpleNums.add(num);
+                    }
+                }
+                System.out.println("Prime numbers: " + simpleNums);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class FactorialNumbersFinder implements Runnable {
+    ArrayList<Integer> array;
+    Object locker;
+
+    public FactorialNumbersFinder(String fileName, Object locker) {
+        this.array = deserialize(fileName);
+        this.locker = locker;
+    }
+
+    @Override
+    public void run() {
+        synchronized(locker) {
+            try {
+                locker.wait();
+                ArrayList<Integer> factorialNums = new ArrayList<>();
+                for (Integer number : array) {
+                    factorialNums.add(getNumberFactorial(number));
+                }
+                System.out.println("Factorial numbers: " + factorialNums);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+class AvgFinder implements Callable<Integer> {
+    ArrayList<Integer> array;
+
+    public AvgFinder(ArrayList<Integer> array) {
+        this.array = array;
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Integer sum = 0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum / array.size();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> ");
+        String filePath = scanner.next();
+        File file = new File(filePath);
+        Object locker=new Object(); //synchronizing object
+        FileFiller fileFiller = new FileFiller(filePath, 10, locker);
+        SimpleNumbersFinder simpleNumbersFinder = new SimpleNumbersFinder(filePath, locker);
+        FactorialNumbersFinder factorialNumbersFinder = new FactorialNumbersFinder(filePath, locker);
+        Thread treadFiller = new Thread(fileFiller);
+        Thread treadSimpleNumbersFinder = new Thread(simpleNumbersFinder);
+        Thread treadFactorialNumbersFinder = new Thread(factorialNumbersFinder);
+        treadFiller.start();
+        treadSimpleNumbersFinder.start();
+        treadFactorialNumbersFinder.start();
+    }
+
+
+
+    public static void serialize(ArrayList<Integer> employees, String fileName) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(fileName);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(employees);
+            fos.close();
+        }
+        catch (FileNotFoundException ex) {
+            System.err.println("File not found:");
+            ex.printStackTrace();
+        }
+        catch (IOException ex) {
+            System.err.println("Input/Output error:");
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                fos.close();
+            }
+            catch (IOException ex) {
+                System.err.println("Input/Output error:");
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static ArrayList<Integer>  deserialize(String fileName) {
+        ArrayList<Integer> employees = new ArrayList<>();
+        FileInputStream fis = null;
+        Object obj = null;
+        try {
+            fis = new FileInputStream(fileName);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            employees =  (ArrayList) ois.readObject();
+            ois.close();
+        }
+        catch (FileNotFoundException ex) {
+            System.err.println("File not found:");
+            ex.printStackTrace();
+        }
+        catch (IOException ex) {
+            System.err.println("Input/Output error:");
+            ex.printStackTrace();
+        }
+        catch (ClassNotFoundException ex) {
+            System.err.println("Class not found:");
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                fis.close();
+            }
+            catch (IOException ex) {
+                System.err.println("Input/Output error:");
+                ex.printStackTrace();
+            }
+        }
+        return employees;
+    }
+
+    public static boolean checkSimple(int i){
+        if (i<=1)
+            return false;
+        else if (i <=3)
+            return true;
+        else if (i%2==0 || i %3 ==0)
+            return false;
+        int n = 5;
+        while (n*n <=i){
+            if (i % n ==0 || i % (n+2) == 0)
+                return false;
+            n=n+6;
+        }
+        return true;
+    }
+    
+    public static Integer getNumberFactorial(Integer number) {
+        int i, factorial = 1;
+        for(i = 1; i <= number; i++){
+            factorial = factorial * i;
+        }
+        return factorial;
+    }
+}
+
+

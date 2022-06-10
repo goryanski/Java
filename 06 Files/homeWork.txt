@@ -1,0 +1,289 @@
+Задание 1
+Пользователь вводит с клавиатуры пути к двум текстовым файла. Программа должна проверить совпадают
+ли их строки. Если нет, то вывести несовпадающую строку
+из каждого файла.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to first file --> ");
+        String firstPath = scanner.next();
+        System.out.print("Enter path to second file --> ");
+        String secondPath = scanner.next();
+        File firstFile = new File(firstPath);
+        File secondFile = new File(secondPath);
+        if(firstFile.exists() && secondFile.exists()) {
+            if(firstFile.canRead() && secondFile.canRead()) {
+                FileReader firstFileReader = null;
+                FileReader secondFileReader = null;
+                try {
+                    firstFileReader = new FileReader(firstFile);
+                    secondFileReader = new FileReader(secondFile);
+                    BufferedReader firstBufferedReader = new BufferedReader(firstFileReader);
+                    BufferedReader secondBufferedReader = new BufferedReader(secondFileReader);
+                    String firstFileLine = "";
+                    String secondFileLine = "";
+                    StringBuilder result = new StringBuilder();
+                    while ((firstFileLine = firstBufferedReader.readLine()) != null) {
+                        secondFileLine = secondBufferedReader.readLine();
+                        if(secondFileLine != null) {
+                            if (!firstFileLine.equals(secondFileLine)) {
+                                result.append(firstFileLine + "\n");
+                            }
+                        }
+                        else {
+                            result.append(firstFileLine + "\n");
+                        }
+                    }
+                    while ((secondFileLine = secondBufferedReader.readLine()) != null) {
+                        firstFileLine = firstBufferedReader.readLine();
+                        if(firstFileLine != null) {
+                            if (!secondFileLine.equals(firstFileLine)) {
+                                result.append(secondFileLine + "\n");
+                            }
+                        }
+                        else {
+                            result.append(secondFileLine + "\n");
+                        }
+                    }
+                    System.out.println("result:\n" + result);
+                }
+                catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        firstFileReader.close();
+                        secondFileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("One of the files can't be read");
+            }
+        }
+        else {
+            System.out.println("One of the files doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+Задание 2
+Пользователь с клавиатуры вводит путь к файлу. Программа должна найти длину самой длинной строки. После
+работы программы на экран отображается полученное
+число и сама строка.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> ");
+        String path = scanner.next();
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    String longestLine = "";
+                    int maxLength = 0;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        int currentLength =  line.length();
+                        if(currentLength > maxLength) {
+                            maxLength = currentLength;
+                            longestLine = line;
+                        }
+                    }
+                    System.out.println("The longest line:\n" + longestLine + "\n");
+                    System.out.println("The longest line size: " + maxLength);
+                } catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+Задание 3
+В файле на разных строках находятся элементы массивов целых. Первая строка содержит элементы первого
+массива, вторая второго и так далее. Например:
+1 23 43 9
+6 33 77 88
+Необходимо загрузить данные из файла в разные массивы, показать каждый массив на экран, показать максимум
+и минимум в каждом массиве, сумму элементов каждого
+массива. Также нужно отобразить максимум и минимум
+среди всех массивов, а также общую сумму всех массивов.
+
+
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String path = "test.txt";
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileReader fileReader = null;
+                try {
+                    fileReader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String line = "";
+                    ArrayList<Integer> generalArray = new ArrayList<>();
+                    int generalArraySum = 0;
+                    int counter = 1;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        System.out.println("\nLine #" + counter + ":");
+                        String[] digitsStr = line.split(" ");
+                        ArrayList<Integer> digitsInt = new ArrayList<>();
+                        int arraySum = 0;
+                        for (int i = 0; i < digitsStr.length; i++) {
+                            int digit = Integer.parseInt(digitsStr[i]);
+                            digitsInt.add(digit);
+                            arraySum += digit;
+                        }
+                        System.out.println("Array: " + digitsInt);
+                        Collections.sort(digitsInt);
+                        System.out.println("Min array element: " + digitsInt.get(0));
+                        System.out.println("Max array element: " + digitsInt.get(digitsInt.size() - 1));
+                        System.out.println("Sum array elements: " + arraySum);
+                        generalArray.addAll(digitsInt);
+                        generalArraySum += arraySum;
+                    }
+                    System.out.println("General array sum: " + generalArraySum);
+                    Collections.sort(generalArray);
+                    System.out.println("\nMin general array element: " + generalArray.get(0));
+                    System.out.println("Max general array element: " + generalArray.get(generalArray.size() - 1));
+                } catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileReader.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}
+
+
+
+
+
+
+
+Задание 4
+Пользователь с клавиатуры вводит путь к файлу и массив целых. Необходимо сохранить исходный массив в первой строке файла, четные значения из массива во второй
+строке файла, нечетные в третьей, перевернутый массив
+в четвертой.
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter path to file --> ");
+        String path = scanner.next();
+        System.out.print("How many digits you want to add to array --> ");
+        int countDigits = scanner.nextInt();
+        ArrayList<Integer> array = new ArrayList<>();
+        for (int i = 0; i < countDigits; i++) {
+            System.out.print("Enter array element --> ");
+            int digit = scanner.nextInt();
+            array.add(digit);
+        }
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.canRead()) {
+                FileWriter fileWriter = null;
+                try {
+                    fileWriter = new FileWriter(file);
+                    fileWriter.write("Original array: " + array + "\n");
+                    ArrayList<Integer> evenElements = new ArrayList<>();
+                    ArrayList<Integer> oddElements = new ArrayList<>();
+                    for (int i = 0; i < array.size(); i++) {
+                        if(array.get(i) % 2 == 0) {
+                            evenElements.add(array.get(i));
+                        }
+                        else {
+                            oddElements.add(array.get(i));
+                        }
+                    }
+                    fileWriter.write("Even elements of array: " + evenElements + "\n");
+                    fileWriter.write("Odd elements of array: " + oddElements + "\n");
+                    Collections.reverse(array);
+                    fileWriter.write("Reversed array: " +  array + "\n");
+
+                    fileWriter.flush();
+                } catch (IOException ex) {
+                    System.out.println("Exception: " + ex);
+                }
+                finally {
+                    try {
+                        fileWriter.close();
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Exception: " + ex);
+                    }
+                }
+            }
+            else {
+                System.out.println("File can't be read");
+            }
+        }
+        else {
+            System.out.println("File doesn't exist");
+        }
+    }
+}

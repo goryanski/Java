@@ -1,0 +1,441 @@
+1. Tasks from first file
+Задание 1
+Реализуйте класс «Человек». Необходимо хранить
+в полях класса: ФИО, дату рождения, контактный телефон, город, страну, домашний адрес. Реализуйте методы
+класса для ввода данных, вывода данных, реализуйте
+доступ к отдельным полям через методы класса.
+
+
+class Person {
+    private String name;
+    private String phone;
+    private String city;
+    private String country;
+    private String address;
+
+    Person(String name, String phone, String city, String country, String address) {
+        setName(name);
+        setPhone(phone);
+        setCity(city);
+        setCountry(country);
+        setAddress(address);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public String getCity() {
+        return city;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void print() {
+        System.out.println("Person name: " + name);
+        System.out.println("Person phone: " + phone);
+        System.out.println("Person city: " + city);
+        System.out.println("Person country: " + country);
+        System.out.println("Person address: " + address);
+    }
+}
+
+
+
+
+
+Задание 2
+Создайте класс «Город». Необходимо хранить в полях класса: название города, название региона, название
+страны, количество жителей в городе, почтовый индекс
+города, телефонный код города. Реализуйте методы класса для ввода данных, вывода данных, реализуйте доступ
+к отдельным полям через методы класса.
+
+
+
+class City {
+    private String name;
+    private String region;
+    private String country;
+    private int citizens;
+    private String index;
+
+    City(String name, String region, String country, int citizens, String index) {
+        setName(name);
+        setRegion(region);
+        setCountry(country);
+        setCitizens(citizens);
+        setIndex(index);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setRegion(String region) {
+        this.region = region;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    public void setCitizens(int citizens) {
+        this.citizens = citizens;
+    }
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public String getRegion() {
+        return region;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public int getCitizens() {
+        return citizens;
+    }
+    public String getIndex() {
+        return index;
+    }
+
+    public void print() {
+        System.out.println("City name: " + name);
+        System.out.println("City region: " + region);
+        System.out.println("City country: " + country);
+        System.out.println("City citizens: " + citizens);
+        System.out.println("City index: " + index);
+    }
+}
+
+
+
+
+
+Задание 3
+Создайте класс «Страна». Необходимо хранить в полях
+класса: название страны, название континента, количество жителей в стране, телефонный код страны, название
+столицы, название городов страны. Реализуйте методы
+класса для ввода данных, вывода данных, реализуйте
+доступ к отдельным полям через методы класса.
+
+class Country {
+    private String name;
+    private String continent;
+    private int population;
+    private String phoneCode;
+    private String capital;
+    private String[] cities;
+
+
+    Country(String name, String continent, int population, String phoneCode, String capital, String[] cities) {
+        setName(name);
+        setContinent(continent);
+        setPopulation(population);
+        setPhoneCode(phoneCode);
+        setCapital(capital);
+        setCities(cities);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setContinent(String continent) {
+        this.continent = continent;
+    }
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+    public void setCapital(String capital) {
+        this.capital = capital;
+    }
+    public void setCities(String[] cities) {
+        this.cities = cities;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+    public int getPopulation() {
+        return population;
+    }
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+    public String getCapital() {
+        return capital;
+    }
+    public String[] getCities() {
+        return cities;
+    }
+
+    public void print() {
+        System.out.println("Country name: " + name);
+        System.out.println("Country continent: " + continent);
+        System.out.println("Country population: " + population);
+        System.out.println("Country phoneCode: " + phoneCode);
+        System.out.println("Country capital: " + capital);
+        System.out.println("Country cities: ");
+        for (int i = 0; i < cities.length; i++) {
+            System.out.println(cities[i]);
+        }
+    }
+}
+
+
+
+
+
+Задание 4
+Создайте класс «Дробь». Необходимо хранить в полях
+класса: числитель и знаменатель. Реализуйте методы класса для ввода данных, вывода данных, реализуйте доступ
+к отдельным полям через методы класса. Также создайте
+методы класса для выполнения арифметических операций
+(сложение, вычитание, умножение, деление, и т.д.).
+
+
+
+
+class Fraction {
+    private int numerator;
+    private int denominator;
+
+
+    Fraction(int numerator, int denominator) {
+        setNumerator(numerator);
+        setDenominator(denominator);
+    }
+
+    public void setNumerator(int numerator) {
+        this.numerator = numerator;
+    }
+    public void setDenominator(int denominator) {
+        this.denominator = denominator;
+    }
+    public int getNumerator() {
+        return numerator;
+    }
+    public int getDenominator() {
+        return denominator;
+    }
+
+    public void print() {
+        System.out.println("Fraction numerator: " + numerator);
+        System.out.println("Fraction denominator: " + denominator);
+    }
+
+    public String addFraction(int numerator2, int denominator2) {
+       return (numerator * denominator2 + numerator2 * denominator) + "/" + (denominator * denominator2);
+    }
+    public String subtractFraction(int numerator2, int denominator2) {
+        return (numerator * denominator2 - numerator2 * denominator) + "/" + (denominator * denominator2);
+    }
+    public String multiplyFraction(int numerator2, int denominator2) {
+        return (numerator * numerator2) + "/" + (denominator * denominator2);
+    }
+    public String divideFraction(int numerator2, int denominator2) {
+        return (numerator * denominator2) + "/" + (denominator * numerator2);
+    }
+}
+
+
+
+
+
+
+
+2. Tasks from second file
+Tasks 1-4 has been already completed in tasks above.
+
+Задание 5
+Реализуйте класс «Книга». Необходимо хранить в полях класса: название книги, ФИО автора, год выпуска,
+название издательства, жанр книги, количество страниц.
+Реализуйте конструкторы и методы класса для ввода
+данных, вывода данных, реализуйте доступ к отдельным
+полям через методы класса. Используйте механизм перегрузки методов.
+
+
+class Book {
+    private String name;
+    private String author;
+    private int year;
+    private String publishingOffice;
+    private String genre;
+    private int pages;
+    
+    Book() {
+        setName("default");
+        setAuthor("default");
+        setYear(0);
+        setPublishingOffice("default");
+        setGenre("default");
+        setPages(0);
+    }
+    Book(String name, String author, int year, String publishingOffice, String genre, int pages) {
+        setName(name);
+        setAuthor(author);
+        setYear(year);
+        setPublishingOffice(publishingOffice);
+        setGenre(genre);
+        setPages(pages);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public void setPublishingOffice(String publishingOffice) {
+        this.publishingOffice = publishingOffice;
+    }
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getAuthor() {
+        return author;
+    }
+    public int getYear() {
+        return year;
+    }
+    public String getPublishingOffice() {
+        return publishingOffice;
+    }
+    public String getGenre() {
+        return genre;
+    }
+    public int getPages() {
+        return pages;
+    }
+
+
+
+    public void print() {
+        System.out.println("Book name: " + name);
+        System.out.println("Book author: " + author);
+        System.out.println("Book year: " + year);
+        System.out.println("Book publishingOffice: " + publishingOffice);
+        System.out.println("Book genre: " + genre);
+        System.out.println("Book pages: " + pages);
+    }
+    public void print(String name, String author) {
+        System.out.println("Book name: " + name);
+        System.out.println("Book author: " + author);
+    }
+    public void print(String name, String author, String genre, int pages) {
+        System.out.println("Book name: " + name);
+        System.out.println("Book author: " + author);
+        System.out.println("Book genre: " + genre);
+        System.out.println("Book pages: " + pages);
+    }
+}
+
+
+
+
+
+Задание 6
+Реализуйте класс «Автомобиль». Необходимо хранить
+в полях класса: название автомобиля, название производителя, год выпуска, объём двигателя. Реализуйте конструкторы и методы класса для ввода данных, вывода данных,
+реализуйте доступ к отдельным полям через методы класса.
+Используйте механизм перегрузки методов
+
+
+
+
+class Car {
+    private String name;
+    private String manufacturer;
+    private int year;
+    private double engineCapacity;
+
+    Car() {
+        setName("default");
+        setYear(0);
+        setManufacturer("default");
+        setEngineCapacity(0.0);
+    }
+    Car(String name, String manufacturer, int year, double engineCapacity) {
+        setName(name);
+        setYear(year);
+        setManufacturer(manufacturer);
+        setEngineCapacity(engineCapacity);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    public void setEngineCapacity(Double engineCapacity) {
+        this.engineCapacity = engineCapacity;
+    }
+    public String getName() {
+        return name;
+    }
+    public int getYear() {
+        return year;
+    }
+    public String getManufacturer() {
+        return manufacturer;
+    }
+    public Double getEngineCapacity() {
+        return engineCapacity;
+    }
+
+    public void print() {
+        System.out.println("Car name: " + name);
+        System.out.println("Car year: " + year);
+        System.out.println("Car manufacturer: " + manufacturer);
+        System.out.println("Car engineCapacity: " + engineCapacity);
+    }
+    public void print(String name, String manufacturer) {
+        System.out.println("Car name: " + name);
+        System.out.println("Car manufacturer: " + manufacturer);
+    }
+    public void print(String name, int year, double engineCapacity) {
+        System.out.println("Car name: " + name);
+        System.out.println("Car year: " + year);
+        System.out.println("Car engineCapacity: " + engineCapacity);
+    }
+}

@@ -1,0 +1,316 @@
+1. Для набора случайно сгенерированных целых чисел нужно:
+ Количество четных;
+ Количество нечетных;
+ Количество равных 0;
+ Количество равных значению, введенному пользователем.
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter number --> ");
+        int userNumber = scanner.nextInt();
+
+        int[] array = createRandomArray(10);
+        IntStream evenNumbersStream = Arrays.stream(array);
+        long countEvenNumbers = evenNumbersStream.filter(n -> n % 2 == 0).count();
+        IntStream oddNumbersStream = Arrays.stream(array);
+        long countOddNumbers = oddNumbersStream.filter(n -> n % 2 != 0).count();
+        IntStream zeroNumbersStream = Arrays.stream(array);
+        long countZeroNumbers = zeroNumbersStream.filter(n -> n == 0).count();
+        IntStream RequiredNumbersStream = Arrays.stream(array);
+        long countRequiredNumbers = RequiredNumbersStream.filter(n -> n == userNumber).count();
+
+        System.out.printf("\ncountEvenNumbers: %d," +
+                        "\ncountOddNumbers: %d" +
+                        "\ncountZeroNumbers: %d" +
+                        "\ncountRequiredNumbers: %d",
+                countEvenNumbers, countOddNumbers, countZeroNumbers, countRequiredNumbers);
+    }
+
+    public static int[] createRandomArray(int n) {
+        Random rd = new Random();
+        int[] array = new int[n];
+        int min = 0;
+        int max = 10;
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rd.nextInt(max-min+1) + min;
+            System.out.print(array[i] +" ");
+        }
+        return array;
+    }
+}
+
+
+
+
+
+
+
+2. Для набора названий городов (города могут повторяться) нужно:
+ Показать все города;
+ Показать все города с названием длиннее шесть символов;
+ Посчитать сколько раз встречается город, чье название ввёл пользователь;
+ Показать все города, которые начинаются на заданную букву.
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter city --> ");
+        String userCity = scanner.next();
+
+        ArrayList<String> cities = new ArrayList<>();
+        Collections.addAll(cities, "Paris", "Warshaw", "Milan", "Tokyo", "Paris", "Milan", "Mariupol");
+
+        System.out.println("All cities:");
+        Stream<String> showCitiesStream = cities.stream();
+        showCitiesStream.forEach(c -> System.out.print(c + "; "));
+
+        System.out.println("\n\nAll cities longer that 6 letters:");
+        Stream<String> showLongCitiesStream = cities.stream();
+        showLongCitiesStream.filter(c -> c.length() > 6)
+            .forEach(c -> System.out.print(c + "; "));
+
+        System.out.print("\n\nNumber of cities that user has entered: ");
+        Stream<String> userCitiesStream = cities.stream();
+        long countCities = userCitiesStream.filter(c -> c.equalsIgnoreCase(userCity)).count();
+        System.out.print(countCities);
+
+        char letter = 'M';
+        System.out.printf("\n\nCities that start with letter %c:\n", letter);
+        Stream<String> searchCitiesStream = cities.stream();
+        searchCitiesStream.filter(c -> c.charAt(0) == letter)
+                .distinct()
+                .forEach(c -> System.out.print(c + "; "));
+    }
+}
+
+
+
+
+
+
+
+Создайте класс «Автомобиля».
+Он должен хранить информацию о названии автомобиля, год выпуска, цена,
+цвет, объем двигателя. Нужно создать набор автомобилей и выполнить следующие задачи:
+ Показать все автомобили;
+ Показать все автомобили заданного цвета;
+ Показать все автомобили заданного объёма;
+ Показать все автомобили дороже заданной цены;
+ Показать все автомобили чей год выпуска находится в указанном диапазоне.
+
+
+
+
+class Car {
+    private String name;
+    private int year;
+    private float price;
+    private String color;
+    private float engineVolume;
+
+    public Car(String name, int year, float price, String color, float engineVolume) {
+        this.name = name;
+        this.year = year;
+        this.price = price;
+        this.color = color;
+        this.engineVolume = engineVolume;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getYear() {
+        return year;
+    }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public float getPrice() {
+        return price;
+    }
+    public void setPrice(float price) {
+        this.price = price;
+    }
+    public String getColor() {
+        return color;
+    }
+    public void setColor(String color) {
+        this.color = color;
+    }
+    public float getEngineVolume() {
+        return engineVolume;
+    }
+    public void setEngineVolume(float engineVolume) {
+        this.engineVolume = engineVolume;
+    }
+    public void printCar() {
+        System.out.printf("name: %s, year: %d, price: %f, color: %s, engineVolume: %f\n", name, year, price, color, engineVolume);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Car> cars = new ArrayList<>();
+        cars.add(new Car("BMW", 1995, 100000.5f, "red", 5.5f));
+        cars.add(new Car("Mazda", 1991, 50000.5f, "blue", 3.5f));
+        cars.add(new Car("Honda", 2010, 600000.5f, "white", 5.3f));
+        cars.add(new Car("Mercedes", 2000, 200000.5f, "red", 4.7f));
+        cars.add(new Car("Tesla", 2021, 9000000.5f, "silver", 5.5f));
+
+        System.out.println("All cars:");
+        Stream<Car> allCarsStream = cars.stream();
+        allCarsStream.forEach(Car::printCar);
+
+        String selectedColor = "red";
+        System.out.printf("\nAll cars with color %s:\n", selectedColor);
+        Stream<Car> carsByColorStream = cars.stream();
+        carsByColorStream.filter(c -> c.getColor().equals(selectedColor)).forEach(Car::printCar);
+
+        float selectedEngineVolume = 5.5f;
+        System.out.printf("\nAll cars with engine volume %f:\n", selectedEngineVolume);
+        Stream<Car> carsByEngineVolumeStream = cars.stream();
+        carsByEngineVolumeStream.filter(c -> c.getEngineVolume() == selectedEngineVolume).forEach(Car::printCar);
+
+        float selectedPrice = 200000f;
+        System.out.printf("\nAll cars with price bigger than %f:\n", selectedPrice);
+        Stream<Car> carsByPriceStream = cars.stream();
+        carsByPriceStream.filter(c -> c.getPrice() > selectedPrice).forEach(Car::printCar);
+
+        int minRangeYear = 2000;
+        int maxRangeYear = 2020;
+        System.out.printf("\nAll cars with from %d year to %d year:\n", minRangeYear, maxRangeYear);
+        Stream<Car> carsByYearStream = cars.stream();
+        carsByYearStream.filter(c -> c.getYear() >= minRangeYear && c.getYear() <= maxRangeYear).forEach(Car::printCar);
+    }
+}
+
+
+
+
+
+
+
+Создайте класс «Телевизор». Он должен хранить информацию о названии модели, год выпуска, цена, диагональ, производитель. Нужно создать набор телевизоров
+и выполнить следующие задачи:
+ Показать все телевизоры;
+ Показать телевизоры с заданной диагональю;
+ Показать все телевизоры одного производителя;
+ Показать все телевизоры текущего года;
+ Показать все телевизоры дороже заданной цены;
+ Показать все телевизоры, отсортированные по цене по возрастанию;
+ Показать все телевизоры, отсортированные по цене по убыванию;
+ Показать все телевизоры, отсортированные по диагонали по возрастанию;
+ Показать все телевизоры, отсортированные по диагонали по убыванию.
+
+
+
+class TV {
+    private String model;
+    private int year;
+    private float price;
+    private float screenDiagonal;
+    private String manufacturer;
+
+    public TV(String model, int year, float price, float screenDiagonal, String manufacturer) {
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        this.screenDiagonal = screenDiagonal;
+        this.manufacturer = manufacturer;
+    }
+    public String getModel() {
+        return model;
+    }
+    public void setModel(String model) {
+        this.model = model;
+    }
+    public int getYear() {
+        return year;
+    }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public float getPrice() {
+        return price;
+    }
+    public void setPrice(float price) {
+        this.price = price;
+    }
+    public float getScreenDiagonal() {
+        return screenDiagonal;
+    }
+    public void setScreenDiagonal(float screenDiagonal) {
+        this.screenDiagonal = screenDiagonal;
+    }
+    public String getManufacturer() {
+        return manufacturer;
+    }
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    public void printTV() {
+        System.out.printf("model: %s, year: %d, price: %f, screenDiagonal: %f, manufacturer: %s\n", model, year, price, screenDiagonal, manufacturer);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<TV> TVs = new ArrayList<>();
+        TVs.add(new TV("Samsung", 2005, 20000.6f, 19.7f, "Korea"));
+        TVs.add(new TV("LG", 20011, 15000.2f, 20.3f, "Korea"));
+        TVs.add(new TV("Panasonic", 1997, 13000.6f, 13.7f, "China"));
+        TVs.add(new TV("Samsung", 2022, 30000.6f, 29.7f, "Poland"));
+        TVs.add(new TV("Panasonic", 2005, 10000.6f, 12.7f, "Poland"));
+
+        System.out.println("All TVs:");
+        Stream<TV> allTVStream = TVs.stream();
+        allTVStream.forEach(TV::printTV);
+
+        float selectedDiagonal = 20.3f;
+        System.out.printf("\nAll TVs with screen diagonal %f:\n", selectedDiagonal);
+        Stream<TV> TVsByDiagonalStream = TVs.stream();
+        TVsByDiagonalStream.filter(tv -> tv.getScreenDiagonal() == selectedDiagonal).forEach(TV::printTV);
+
+        String selectedManufacturer = "Poland";
+        System.out.printf("\nAll TVs with manufacturer %s:\n", selectedManufacturer);
+        Stream<TV> TVsByManufacturerStream = TVs.stream();
+        TVsByManufacturerStream.filter(tv -> tv.getManufacturer().equals(selectedManufacturer)).forEach(TV::printTV);
+
+        int currentYear = 2022;
+        System.out.printf("\nAll %d year TVs:\n", currentYear);
+        Stream<TV> TVsByYearStream = TVs.stream();
+        TVsByYearStream.filter(tv -> tv.getYear() == currentYear).forEach(TV::printTV);
+
+        float selectedPrice = 14000f;
+        System.out.printf("\nAll TVs with price bigger than %f:\n", selectedPrice);
+        Stream<TV> TVsByPriceStream = TVs.stream();
+        TVsByPriceStream.filter(tv -> tv.getPrice() > selectedPrice).forEach(TV::printTV);
+
+        System.out.println("\nSort by ascending (price):");
+        Stream<TV> ascendingPriceSortStream = TVs.stream();
+        ascendingPriceSortStream.sorted(Comparator.comparingDouble(TV::getPrice))
+                .forEach(TV::printTV);
+
+        System.out.println("\nSort by descending (price):");
+        Stream<TV> descendingPriceSortStream = TVs.stream();
+        descendingPriceSortStream.sorted(Comparator.comparingDouble(TV::getPrice).reversed())
+                .forEach(TV::printTV);
+
+        System.out.println("\nSort by ascending (screenDiagonal):");
+        Stream<TV> ascendingDiagonalSortStream = TVs.stream();
+        ascendingDiagonalSortStream.sorted(Comparator.comparingDouble(TV::getScreenDiagonal))
+                .forEach(TV::printTV);
+
+        System.out.println("\nSort by descending (screenDiagonal):");
+        Stream<TV> descendingDiagonalSortStream = TVs.stream();
+        descendingDiagonalSortStream.sorted(Comparator.comparingDouble(TV::getScreenDiagonal).reversed())
+                .forEach(TV::printTV);
+    }
+}

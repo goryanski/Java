@@ -1,0 +1,313 @@
+Задание 1
+Создайте и вызовите следующие лямбда-выражения:
+■ Проверка является ли год високосным;
+■ Подсчет количества дней между двумя датами;
+■ Подсчёт количества полных недель между двумя
+датами;
+■ Подсчёт дня недели по полученной дате. Например,
+20 июля 1969 года — воскресенье.
+
+
+
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+
+public interface MyDate {
+    boolean isYearLeap(int year);
+    long getCountDays(String date1, String date2);
+    long getCountFullWeeks(String date1, String date2);
+    String getWeekDay(String date);
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        MyDate date = new MyDate() {
+            @Override
+            public boolean isYearLeap(int year) {
+                if (year % 4 != 0) {
+                    return false;
+                } else if (year % 400 == 0) {
+                    return true;
+                } else if (year % 100 == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public long getCountDays(String date1, String date2) {
+                LocalDate dateBefore = LocalDate.parse(date1);
+                LocalDate dateAfter = LocalDate.parse(date2);
+                return ChronoUnit.DAYS.between(dateBefore, dateAfter);
+            }
+
+            @Override
+            public long getCountFullWeeks(String date1, String date2) {
+                LocalDate dateBefore = LocalDate.parse(date1);
+                LocalDate dateAfter = LocalDate.parse(date2);
+                return ChronoUnit.WEEKS.between(dateBefore, dateAfter);
+            }
+
+            @Override
+            public String getWeekDay(String date) {
+                LocalDate localDate = LocalDate.parse(date);
+                DayOfWeek day = localDate.getDayOfWeek();
+                return day.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+            }
+        };
+
+        // 1) isYearLeap:
+        int year = 2012;
+        if(date.isYearLeap(year)) {
+            System.out.printf("1) Year %d is leap!\n", year);
+        }
+        else {
+            System.out.printf("1) Year %d is not leap!\n", year);
+        }
+
+
+        // 2) difference days between dates
+        String date1 = "2017-07-20";
+        String date2 = "2017-07-29";
+        long daysDiff = date.getCountDays(date1, date2);
+        System.out.printf("2) Difference between dates '%s' and '%s' is %d days\n", date1, date2, daysDiff);
+
+
+        // 3) difference weeks between dates
+        long weeksDiff = date.getCountFullWeeks(date1, date2);
+        System.out.printf("3) Difference between dates '%s' and '%s' is %d full weeks\n", date1, date2, weeksDiff);
+
+
+        // 4) getWeekDay
+        String dayOfWeek = date.getWeekDay(date1);
+        System.out.printf("4) Day of week in date '%s' is a %s\n", date1, dayOfWeek);
+    }
+}
+
+
+
+
+
+
+
+
+Задание 2
+Создайте и вызовите следующие лямбда-выражения:
+■ Сумма двух дробей;
+■ Разница двух дробей;
+■ Произведение двух дробей;
+■ Деление двух дробей.
+
+
+
+
+
+class Fraction {
+    public int getNumerator() {
+        return numerator;
+    }
+
+    public void setNumerator(int numerator) {
+        this.numerator = numerator;
+    }
+
+    public int getDenominator() {
+        return denominator;
+    }
+
+    public void setDenominator(int denominator) {
+        this.denominator = denominator;
+    }
+
+    public Fraction(int numerator, int denominator) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    private int numerator;
+    private int denominator;
+}
+
+interface FractionOperations {
+    void addFractions(Fraction fraction1, Fraction fraction2);
+    void subtractFractions(Fraction fraction1, Fraction fraction2);
+    void multiplyFractions(Fraction fraction1, Fraction fraction2);
+    void divideFractions(Fraction fraction1, Fraction fraction2);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        FractionOperations operations = new FractionOperations() {
+            @Override
+            public void addFractions(Fraction fraction1, Fraction fraction2) {
+                String result = (fraction1.getNumerator() * fraction2.getDenominator()
+                        + fraction2.getNumerator() * fraction1.getDenominator())
+                        + "/" + (fraction1.getDenominator() * fraction2.getDenominator());
+                System.out.println("Result of fractions adding is " + result);
+            }
+
+            @Override
+            public void subtractFractions(Fraction fraction1, Fraction fraction2) {
+                String result = (fraction1.getNumerator() * fraction2.getDenominator()
+                        - fraction2.getNumerator() * fraction1.getDenominator())
+                        + "/" + (fraction1.getDenominator() * fraction2.getDenominator());
+                System.out.println("Result of fractions subtracting is " + result);
+            }
+
+            @Override
+            public void multiplyFractions(Fraction fraction1, Fraction fraction2) {
+                String result = (fraction1.getNumerator() * fraction2.getNumerator())
+                        + "/" + (fraction1.getDenominator() * fraction2.getDenominator());
+                System.out.println("Result of fractions multiplying is " + result);
+            }
+
+            @Override
+            public void divideFractions(Fraction fraction1, Fraction fraction2) {
+                String result = (fraction1.getNumerator() * fraction2.getDenominator())
+                        + "/" + (fraction1.getDenominator() * fraction2.getNumerator());
+                System.out.println("Result of fractions dividing is " + result);
+            }
+        };
+
+        Fraction fraction1 = new Fraction(1, 2);
+        Fraction fraction2 = new Fraction(3, 4);
+        operations.addFractions(fraction1, fraction2);
+        operations.subtractFractions(fraction1, fraction2);
+        operations.multiplyFractions(fraction1, fraction2);
+        operations.divideFractions(fraction1, fraction2);
+    }
+}
+
+
+
+
+
+
+
+
+Задание 3
+Создайте и вызовите следующие лямбда-выражения.
+Обязательно использовать шаблоны:
+■ Максимум из четырёх;
+■ Минимум из четырёх.
+
+
+
+
+interface MaxFinder {
+    int find(ArrayList<Integer> array);
+}
+interface MinFinder {
+    int find(ArrayList<Integer> array);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MaxFinder maxFinder = (array) -> {
+            // create a new array to make a copy of original array
+            ArrayList<Integer> newArray = new ArrayList<>(array);
+            Collections.sort(newArray);
+            return newArray.get(newArray.size() - 1);
+        };
+        MinFinder minFinder = (array) -> {
+            ArrayList<Integer> newArray = new ArrayList<>(array);
+            Collections.sort(newArray);
+            return newArray.get(0);
+        };
+
+        ArrayList<Integer> array1 = new ArrayList<>(Arrays.asList(7, 6, 3, 4));
+        int max = maxFinder.find(array1);
+        int min = minFinder.find(array1);
+
+        System.out.println("max - " + max);
+        System.out.println("min - " + min);
+        System.out.println(array1);
+    }
+}
+
+
+
+
+
+
+
+Задание 4
+Создайте и вызовите следующие лямбда-выражения.
+Обязательно использовать лямбду, как параметр метода.
+Метод находит сумму элементов массива, которые соответствуют условию лямбда-выражения. Варианты лямбда-выражений:
+■ Проверка на равенство конкретному числу;
+■ Число не находится в диапазоне от A до B;
+■ Проверка на положительность числа;
+■ Проверка на отрицательность числа.
+
+
+
+
+
+interface EqualLambda {
+    boolean isEqual(int a, int b);
+}
+interface DiapasonLambda {
+    boolean inDiapason(int a, int b, int x);
+}
+interface PositiveLambda {
+    boolean isPositive(int x);
+}
+interface NegativeLambda {
+    boolean isNegative(int x);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        EqualLambda equalLambda = (a, b) -> a == b;
+        DiapasonLambda diapasonLambda = (a, b, c) -> c >= a && c <= b;
+        PositiveLambda positiveLambda = x -> x > 0;
+        NegativeLambda negativeLambda = x -> x < 0;
+
+        checkIfNumbersEqual(4, 7, equalLambda);
+        checkIfNumbersInDiapason(2, 11, 5, diapasonLambda);
+        checkIfNumbersIsPositive(44, positiveLambda);
+        checkIfNumbersIsNegative(22, negativeLambda);
+    }
+
+    public static void checkIfNumbersEqual(int a, int b, EqualLambda lambda) {
+        if(lambda.isEqual(a, b)) {
+            System.out.println("Numbers are equal");
+        }
+        else {
+            System.out.println("Numbers aren't equal");
+        }
+    }
+    public static void checkIfNumbersInDiapason(int a, int b, int x, DiapasonLambda lambda) {
+        if(lambda.inDiapason(a, b, x)) {
+            System.out.println("Number is in diapason");
+        }
+        else {
+            System.out.println("Number isn't in diapason");
+        }
+    }
+    public static void checkIfNumbersIsPositive(int x, PositiveLambda lambda) {
+        if(lambda.isPositive(x)) {
+            System.out.println("Number is positive");
+        }
+        else {
+            System.out.println("Number isn't positive");
+        }
+    }
+    public static void checkIfNumbersIsNegative(int x, NegativeLambda lambda) {
+        if(lambda.isNegative(x)) {
+            System.out.println("Number is negative");
+        }
+        else {
+            System.out.println("Number isn't negative");
+        }
+    }
+}
+

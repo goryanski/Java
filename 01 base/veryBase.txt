@@ -1,0 +1,395 @@
+Задание 4
+Пользователь вводит шестизначное число. Необходимо
+поменять в этом числе первую и шестую цифры, а также
+вторую и пятую цифры.
+Например, 723895 должно превратиться в 593827.
+Если пользователь ввел не шестизначное число требуется вывести сообщение об ошибке.
+
+
+	Scanner console = new Scanner(System.in);
+        System.out.println("Enter num: ");
+        int num = console.nextInt();
+        if (num < 100000 || num > 999999) {
+            System.out.println("Wrong number!");
+        } else {
+            int a = num / 100000;
+            int b = num / 10000 % 10;
+            int c = num / 1000 % 10;
+            int d = num / 100 % 10;
+            int e = num / 10 % 10;
+            int f = num % 10;
+            System.out.println(f + "" + e + "" + c + "" + d + "" + b + "" + a);
+        }
+
+
+
+
+
+Задание 5
+Пользователь вводит с клавиатуры номер месяца (от
+1 до 12). В зависимости от полученного номера месяца
+программа выводит на экран надпись: Winter (если введено
+значение 1,2 или 12), Spring (если введено значение от 3
+до 5), Summer (если введено значение от 6 до 8), Autumn
+(если введено значение от 9 до 11).
+Если пользователь ввел значение не в диапазоне от 1
+до 12 требуется вывести сообщение об ошибке.
+
+ 	Scanner console = new Scanner(System.in);
+        System.out.println("Enter num: ");
+        int num = console.nextInt();
+        if (num < 1 || num > 12) {
+            System.out.println("Wrong number!");
+        } else {
+            if(num == 1 || num == 2 || num == 12) {
+                System.out.println("Winter");
+            }
+            if(num >= 3 && num <= 5) {
+                System.out.println("Spring");
+            }
+            if(num >= 6 && num <= 8) {
+                System.out.println("Summer");
+            }
+            if(num >= 9 && num <= 11) {
+                System.out.println("Autumn");
+            }
+        }
+
+
+
+
+Задание 6
+Пользователь вводит с клавиатуры количество метров. В зависимости от выбора пользователя программа
+переводит метры в мили, дюймы или ярды.
+
+Scanner console = new Scanner(System.in);
+        System.out.println("Enter number of meters: ");
+        int num = console.nextInt();
+        System.out.println("Convert to yards - 1");
+        System.out.println("Convert to inches - 2");
+        System.out.println("Convert to miles - 3");
+        int choose = console.nextInt();
+        switch (choose) {
+            case 1:
+                System.out.println(num * 1.094);
+                break;
+            case 2:
+                System.out.println(num * 39.37);
+                break;
+            case 3:
+                System.out.println((double)num / 1609);
+                break;
+        }
+
+
+
+
+
+Задание 7
+Пользователь вводит с клавиатуры два числа. Нужно
+показать все нечетные числа в указанном диапазоне. Если
+границы диапазона указаны неправильно требуется произвести нормализацию границ. Например, пользователь
+ввел 20 и 11, требуется нормализация, после которой
+начало диапазона станет равно 11, а конец 20. 
+
+ 	Scanner console = new Scanner(System.in);
+        System.out.println("Enter first number: ");
+        int firstNum = console.nextInt();
+        System.out.println("Enter second number: ");
+        int secondNum = console.nextInt();
+        int left, right = 0;
+        if(firstNum < secondNum) {
+            left = firstNum;
+            right = secondNum;
+        }
+        else {
+            left = secondNum;
+            right = firstNum;
+        }
+        for (int i = left; i <= right; i++) {
+            if(i % 2 != 0) {
+                System.out.println(i);
+            }
+        }
+
+
+
+
+
+Задание 8
+Показать на экран таблицу умножения в диапазоне,
+указанном пользователем. Например, если пользователь
+указал 3 и 5, таблица может выглядеть так:
+3*1 = 3 3*2 = 6 3*3 = 9 ………… 3* 10 = 30
+……………………………………………………
+5*1 = 5 5 *2 = 10 5 *3 = 15 ………….
+
+
+	Scanner console = new Scanner(System.in);
+        System.out.println("Enter first number: ");
+        int firstNum = console.nextInt();
+        System.out.println("Enter second number: ");
+        int secondNum = console.nextInt();
+        int left, right = 0;
+        if (firstNum < secondNum) {
+            left = firstNum;
+            right = secondNum;
+        } else {
+            left = secondNum;
+            right = firstNum;
+        }
+        for (int i = left; i <= right; i++) {
+            for (int j = 1; j <= 10; j++) {
+                System.out.print(i + " * " + j + " = " + i * j + " ");
+            }
+            System.out.println();
+        }
+
+
+
+
+
+Задание 9
+В одномерном массиве, заполненном случайными
+числами, определить минимальный и максимальный
+элементы, посчитать количество отрицательных элементов, посчитать количество положительных элементов, посчитать количество нулей. Результаты вывести
+на экран. 
+
+
+
+	Random rd = new Random();
+        int[] array = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rd.nextInt();
+        }
+        // sort
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = array.length - 1; j > i; j--) {
+                if (array[j - 1] > array[j]) {
+                    int tmp = array[j - 1];
+                    array[j - 1] = array[j];
+                    array[j] = tmp;
+                }
+            }
+        }
+        System.out.println("Max = " + array[array.length - 1]
+                + "; Min = " + array[0]);
+
+        int countNegatives, countPositives, countZeros;
+        countNegatives = countPositives = countZeros = 0;
+
+        System.out.print("[ ");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+            if(array[i] < 0) {
+                countNegatives++;
+            }
+            else if(array[i] > 0) {
+                countPositives++;
+            }
+            else {
+                countZeros++;
+            }
+        }
+        System.out.print("]\n");
+        System.out.println("countNegatives: " + countNegatives);
+        System.out.println("countPositives: " + countPositives);
+        System.out.println("countZeros: " + countZeros);
+
+
+
+
+
+
+
+Задание 10
+Есть одномерный массив, заполненный случайными
+числами. На основании данных этого массива нужно:
+■ Создать одномерный массив, содержащий только
+четные числа из первого массива;
+■ Создать одномерный массив, содержащий только
+нечетные числа из первого массива;
+■ Создать одномерный массив, содержащий только
+отрицательные числа из первого массива;
+■ Создать одномерный массив, содержащий только
+положительные числа из первого массива.
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Random rd = new Random();
+        int[] array = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rd.nextInt();
+        }
+        printArray(array);
+
+        int[] evenArray, oddArray, negativeArray, positiveArray;
+        evenArray = oddArray = negativeArray = positiveArray = new int[0];
+
+
+        for (int i = 0; i < array.length; i++) {
+            if(array[i] % 2 == 0) {
+                evenArray = push(evenArray, array[i]);
+            }
+            else if(array[i] % 2 != 0) {
+                oddArray = push(oddArray, array[i]);
+            }
+
+            if(array[i] < 0) {
+                negativeArray = push(negativeArray, array[i]);
+            }
+            else if(array[i] > 0) {
+                positiveArray = push(positiveArray, array[i]);
+            }
+        }
+
+        System.out.print("evenArray: ");
+        printArray(evenArray);
+        System.out.print("oddArray: ");
+        printArray(oddArray);
+        System.out.print("negativeArray: ");
+        printArray(negativeArray);
+        System.out.print("positiveArray: ");
+        printArray(positiveArray);
+
+    }
+    private static int[] push(int[] array, int value) {
+        int[] newArray = new int[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        return newArray;
+    }
+    private static void  printArray(int[] array) {
+        System.out.print("[ ");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.print("]\n\n");
+    }
+}
+
+
+
+
+
+
+Задание 11
+Напишите метод, который отображает горизонтальную или вертикальную линию из некоторого символа.
+Метод принимает в качестве параметра: длину линии,
+направление, символ.
+
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Scanner console = new Scanner(System.in);
+        System.out.println("Enter length of line: ");
+        int length = console.nextInt();
+        System.out.println("Enter direction (horizontal - 1, vertical - 2) ");
+        int direction = console.nextInt();
+        String directionStr = direction == 1 ? "horizontal" : "vertical";
+        System.out.println("Enter line sign");
+        char sign = console.next().charAt(0);;
+
+        drawLine(length, directionStr, sign);
+    }
+    private static void drawLine(int length, String direction, char sign) {
+        if (direction.equals("horizontal")) {
+            for (int i = 0; i < length; i++) {
+                System.out.print(sign);
+            }
+        }
+        else {
+            for (int i = 0; i < length; i++) {
+                System.out.println(sign);
+            }
+        }
+    }
+
+}
+
+
+
+
+
+Задание 12
+Напишите метод, сортирующий массив по убыванию
+или возрастанию в зависимости от выбора пользователя.
+
+
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Random rd = new Random();
+        int[] array = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rd.nextInt();
+        }
+        printArray(array);
+
+        Scanner console = new Scanner(System.in);
+        System.out.print("Ascending sort - 1, descending sort - 2 --> ");
+        int choose = console.nextInt();
+
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = array.length - 1; j > i; j--) {
+                if (array[j - 1] > array[j]) {
+                    int tmp = array[j - 1];
+                    array[j - 1] = array[j];
+                    array[j] = tmp;
+                }
+            }
+        }
+
+        if(choose == 1) {
+            printArray(array);
+        }
+        else {
+            printArrayDesc(array);
+        }
+
+    }
+    private static void  printArray(int[] array) {
+        System.out.print("[ ");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.print("]\n\n");
+    }
+    private static void  printArrayDesc(int[] array) {
+        System.out.print("[ ");
+        for (int i = array.length - 1; i >= 0; i--) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.print("]\n\n");
+    }
+}
+
+
+
+
+13. проверить строку на полиндром которую вводит пользователь 
+"А роза упала на лапу Азора"
+
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Scanner console = new Scanner(System.in);
+        System.out.print("Enter string --> ");
+        String text = console.nextLine();
+
+        if (isPalindrome(text))
+            System.out.print("Yes");
+        else
+            System.out.print("No");
+    }
+    private static boolean isPalindrome(String str) {
+        String clearStr = str.replaceAll(" ","").toLowerCase();
+        String reversedStr = "";
+        for (int i = clearStr.length() - 1; i >= 0; i--) {
+            reversedStr += clearStr.charAt(i);
+        }
+       return clearStr.equals(reversedStr);
+    }
+}

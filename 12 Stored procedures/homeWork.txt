@@ -1,0 +1,182 @@
+У Вас есть магазин запчастей
+БД товаров
+ид
+наименование 
+ценна
+количество 
+дата след закупки
+
+БД Сотрудникво(2 сотрудника)
+ФИО 
+количество чеков
+средняя сумма чека
+общий сумма за все чеки 
+
+Прописать хранимую процедуру
+-Расширение таблицы товаров 
+-Удаление наименований с таблицы 
+-увеличить ценну на % роста или падения $
+-изменить количество товаров 
+- изменить количество чеков 
+- высчитать среднюю сумму чека 
+- общая сумма чеков 
+
+
+
+
+
+CREATE TABLE AutoParts (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(30) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  productsCount INT NOT NULL,
+  dateNextOrder DATE NOT NULL
+);
+INSERT INTO AutoParts(name, price, productsCount, dateNextOrder)
+VALUES
+('wheel', 520, 74, '2022-06-11'),
+('windshield', 1702, 14, '2022-05-10'),
+('seat', 700.5, 54, '2022-07-02'),
+('mirror', 204, 174, '2022-05-22');
+
+
+CREATE TABLE Employees (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  fullName VARCHAR(45) NOT NULL,
+  checksCount INT,
+  checkAvgSum DECIMAL(10,2),
+  generalChecksSum DECIMAL(10,2)
+);
+INSERT INTO Employees(fullName)
+VALUES
+('Ivanov Igor Igorovich'),
+('Petrov Ivan Ivanovich');
+
+
+
+
+# -Расширение таблицы товаров
+CREATE PROCEDURE addNewItem(newName VARCHAR(30), newPrice DECIMAL(10,2), newCount INT, newDate VARCHAR(15))
+BEGIN
+    INSERT INTO AutoParts(name, price, productsCount, dateNextOrder)
+    VALUES (newName, newPrice, newCount, newDate);
+END;
+
+
+
+# -Удаление наименований с таблицы
+CREATE PROCEDURE deleteAutoPart(partName VARCHAR(30))
+BEGIN
+    DELETE FROM AutoParts WHERE name = partName;
+END;
+
+
+#-увеличить ценну на % роста или падения $
+CREATE PROCEDURE changePrice(oldPrice DECIMAL(10,2), percent DECIMAL(10,2), partName VARCHAR(30))
+BEGIN
+    DECLARE newPrice DECIMAL(10,2) DEFAULT 0;
+    SET newPrice = oldPrice + (oldPrice * percent);
+    UPDATE AutoParts SET price = newPrice WHERE name = partName;
+
+END;
+
+
+#-изменить количество товаров
+CREATE PROCEDURE changeCount(newCount INT, partName VARCHAR(30))
+BEGIN
+    UPDATE AutoParts SET productsCount = newCount WHERE name = partName;
+END;
+
+
+#- изменить количество чеков
+CREATE PROCEDURE changeCheckNumbers(newCount INT, employeeName VARCHAR(30))
+BEGIN
+    UPDATE Employees SET checksCount = newCount WHERE fullName = employeeName;
+END;
+
+
+#- высчитать среднюю сумму чека
+CREATE PROCEDURE getAvg(OUT res INT)
+BEGIN
+    SELECT AVG(price) INTO res FROM AutoParts;
+END;
+
+
+#-общая сумма чеков
+CREATE PROCEDURE getSum(OUT res INT)
+BEGIN
+    SELECT SUM(price) INTO res FROM AutoParts;
+END;
+
+
+
+
+
+
+
+package com.study;
+import java.sql.*;
+
+public class Main {
+    public static void main(String[] args) throws ClassNotFoundException {
+        String url = "jdbc:mysql://localhost:3306/dbtest";
+        String username = "root";
+        String password = "1793";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             Statement statement = connection.createStatement()) {
+
+            //-Расширение таблицы товаров
+            CallableStatement addItem = connection.prepareCall("{call addNewItem(?, ?, ?, ?)}");
+            addItem.setString(1, "new item");
+            addItem.setFloat(2, (float) 150);
+            addItem.setInt(3, 10);
+            addItem.setString(4, "2022-07-17");
+            addItem.execute();
+
+
+            //-Удаление наименований с таблицы
+            CallableStatement deleteColumn = connection.prepareCall("{call deleteAutoPart(?)}");
+            deleteColumn.setString(1, "wheel");
+            deleteColumn.execute();
+
+            // -увеличить ценну на % роста или падения $
+            CallableStatement changePrice = connection.prepareCall("{call changePrice(?, ?, ?)}");
+            changePrice.setFloat(1, 204);
+            changePrice.setFloat(2, (float) 0.2);
+            changePrice.setString(3, "mirror");
+            changePrice.execute();
+
+
+            //-изменить количество товаров
+            CallableStatement changeCount = connection.prepareCall("{call changeCount(?, ?)}");
+            changeCount.setInt(1, 333);
+            changeCount.setString(2, "seat");
+            changeCount.execute();
+
+
+            // - изменить количество чеков
+            CallableStatement changeCheckNumber = connection.prepareCall("{call changeCheckNumbers(?, ?)}");
+            changeCheckNumber.setInt(1, 21);
+            changeCheckNumber.setString(2, "Ivanov Igor Igorovich");
+            changeCheckNumber.execute();
+
+
+            // - высчитать среднюю сумму чека
+            CallableStatement getAvg = connection.prepareCall("{call getAvg(?)}");
+            getAvg.registerOutParameter(1,Types.FLOAT);
+            getAvg.execute();
+            System.out.println(getAvg.getInt(1));
+
+
+            // общая сумма чеков
+            CallableStatement getSum = connection.prepareCall("{call getSum(?)}");
+            getSum.registerOutParameter(1,Types.FLOAT);
+            getSum.execute();
+            System.out.println(getSum.getInt(1));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
